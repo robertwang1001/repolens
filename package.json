@@ -1,0 +1,72 @@
+{
+  "name": "sindresorhus",
+  "type": "module",
+  "version": "0.0.0",
+  "private": true,
+  "packageManager": "pnpm@11.4.0+sha512.f0febc7e37552ab485494a914241b338e0b3580b93d54ce31f00933015880863129038a1b4ae4e414a0ee63ac35bf21197e990172c4a68256450b5636310968f",
+  "description": "",
+  "author": {
+    "name": "Robert Wang",
+    "email": "glorywong1001@gmail.com"
+  },
+  "index": "./dist/index.js",
+  "license": "MIT",
+  "homepage": "https://github.com/robertwang1001/tmpl-base#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/robertwang1001/tmpl-base.git"
+  },
+  "bugs": "https://github.com/robertwang1001/tmpl-base/issues",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev --port=3000",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc",
+    "lint": "eslint .",
+    "lint:fix": "pnpm lint --fix"
+  },
+  "dependencies": {
+    "@chakra-ui/react": "^3.35.0",
+    "@emotion/react": "^11.14.0",
+    "@react-router/fs-routes": "^7.15.1",
+    "@react-router/node": "7.15.1",
+    "@react-router/serve": "7.15.1",
+    "isbot": "^5.1.36",
+    "next-themes": "^0.4.6",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-icons": "^5.6.0",
+    "react-router": "7.15.1",
+    "usehooks-ts": "^3.1.1"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^9.0.0",
+    "@commitlint/cli": "^21.0.1",
+    "@commitlint/config-conventional": "^21.0.1",
+    "@react-router/dev": "7.15.1",
+    "@types/node": "^24.12.4",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^10.4.0",
+    "lint-staged": "^17.0.5",
+    "renovate": "^43.150.0",
+    "simple-git-hooks": "^2.13.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.0.3"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged",
+    "commit-msg": "pnpm commitlint --edit ${1}"
+  },
+  "lint-staged": {
+    "*": "pnpm lint:fix"
+  }
+}
