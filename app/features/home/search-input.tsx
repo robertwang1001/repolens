@@ -80,10 +80,15 @@ export default function SearchInput() {
             setTextQuery(e.currentTarget.value)
           }}
           disabled={fetcher.state === 'loading'}
+          onKeyUp={(e) => {
+            if (e.key === 'Enter') {
+              search(textQuery)
+            }
+          }}
         />
       </InputGroup>
-      <Button onClick={() => search(textQuery ?? '')} size="xl" bg="bg.subtle" variant="outline" disabled={fetcher.state === 'loading'}>
-        Submit
+      <Button onClick={() => search(textQuery)} size="xl" bg="bg.subtle" variant="outline" disabled={fetcher.state === 'loading'}>
+        Search
       </Button>
     </HStack>
   )
