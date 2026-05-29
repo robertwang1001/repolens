@@ -1,5 +1,6 @@
 import type { Route } from './+types/root'
 
+import { Container, Heading, Stack, Text } from '@chakra-ui/react'
 import {
   isRouteErrorResponse,
   Links,
@@ -57,7 +58,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     message = error.status === 404 ? '404' : 'Error'
     details
       = error.status === 404
-        ? 'The requested page could not be found.'
+        ? `The requested page could not be found. ${error.data}`
         : error.statusText || details
   }
   else if (import.meta.env.DEV && error && error instanceof Error) {
@@ -66,14 +67,16 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <Container as="main" maxW="8xl" h="vh" display="flex" justifyContent="center" alignItems="center">
+      <Stack>
+        <Heading size="5xl" textAlign="center">{message}</Heading>
+        <Text fontSize="2xl" color="fg.muted">{details}</Text>
+        {stack && (
+          <pre className="w-full p-4 overflow-x-auto">
+            <code>{stack}</code>
+          </pre>
+        )}
+      </Stack>
+    </Container>
   )
 }
