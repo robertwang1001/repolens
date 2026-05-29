@@ -22,8 +22,8 @@
   },
   "scripts": {
     "build": "react-router build",
-    "dev": "LOG_LEVEL=debug react-router dev --port=3000",
-    "prepare": "pnpm simple-git-hooks && vercel env pull .env",
+    "dev": "LOG_LEVEL=debug vercel env pull .env && react-router dev --port=3000",
+    "prepare": "pnpm simple-git-hooks",
     "start": "react-router-serve ./build/server/index.js",
     "typecheck": "react-router typegen && tsc",
     "lint": "eslint .",
