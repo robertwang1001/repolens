@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/robertwang1001/sindresorhus/compare/v1.0.1...v1.0.2) (2026-05-29)
+
+
+### Bug Fixes
+
+* update search result cache time to 30m ([1492eb2](https://github.com/robertwang1001/sindresorhus/commit/1492eb22c9e5ba9e8c3b8c641a6d8a7a4d8817dc))
+
 ## [1.0.1](https://github.com/robertwang1001/sindresorhus/compare/v1.0.0...v1.0.1) (2026-05-29)
 
 
