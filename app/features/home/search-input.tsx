@@ -67,7 +67,7 @@ export default function SearchInput() {
   }, [])
 
   return (
-    <HStack>
+    <HStack maxW="3xl">
       <InputGroup startElement={fetcher.state === 'loading' ? <Spinner /> : <LuSearch size="22" />} endElement={endElement}>
         <Input
           ref={inputRef}

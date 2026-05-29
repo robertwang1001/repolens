@@ -28,7 +28,7 @@ export function createRepoSearchClient(params: {
    *
    * @remarks
    * - Cursor pagination: pass `after` from the previous response to get the next page.
-   * - Default page size is 10 (if not provided).
+   * - Default page size is 12 (if not provided).
    * - Results are cached by `{queryString, first, after}`.
    */
   async function searchOwnedReposPage(options: RepoSearchOptions): Promise<RepoSearchPageResult> {
@@ -38,7 +38,7 @@ export function createRepoSearchClient(params: {
       scope = 'narrow',
       sortKey = 'updated',
       sortDir = 'desc',
-      first = 10,
+      first = 12,
       after = null,
     } = options
 

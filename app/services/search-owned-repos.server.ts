@@ -4,7 +4,7 @@ import { octokit } from '~/lib/octokit.server'
 import { createTTLCache } from '~/lib/ttl-cache'
 import { createRepoSearchClient } from './create-repo-search-client'
 
-const cache = createTTLCache<RepoSearchPageResult>({ ttlMs: 59 * 60_000, maxEntries: 300 })
+const cache = createTTLCache<RepoSearchPageResult>({ ttlMs: 5 * 60_000, maxEntries: 300 })
 
 const client = createRepoSearchClient({ octokit, cache, debounceMs: 300 })
 

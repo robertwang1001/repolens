@@ -1,9 +1,10 @@
 import type { RepoListItem, RepoSearchPageResult } from '~/types/repo-search'
-import { Box, Button, Card, For, Heading, HStack, Link, SimpleGrid, Text } from '@chakra-ui/react'
+import { Box, Button, Card, EmptyState, For, Heading, HStack, Link, SimpleGrid, Text, VStack } from '@chakra-ui/react'
 import { useEffect, useMemo, useState } from 'react'
 import { AiOutlineRead } from 'react-icons/ai'
 import { GoLaw } from 'react-icons/go'
 import { LuGitFork, LuStar } from 'react-icons/lu'
+import { TbMoodEmpty } from 'react-icons/tb'
 import { useFetcher } from 'react-router'
 import { format } from 'timeago.js'
 import { Tooltip } from '~/components/ui/tooltip'
@@ -92,10 +93,34 @@ export default function RepositoryList() {
   }, [fetcher.data])
 
   return (
-    <SimpleGrid gap={4} minChildWidth="xs">
-      <For each={repos}>
-        {repo => <RepositoryListItem key={repo.id} repo={repo} />}
-      </For>
-    </SimpleGrid>
+    <Box>
+      {
+        repos.length > 0
+          ? (
+              <SimpleGrid gap={4} minChildWidth="xs">
+                <For each={repos}>
+                  {repo => <RepositoryListItem key={repo.id} repo={repo} />}
+                </For>
+              </SimpleGrid>
+            )
+          : (
+              <EmptyState.Root>
+                <EmptyState.Content>
+                  <EmptyState.Indicator>
+                    <TbMoodEmpty />
+                  </EmptyState.Indicator>
+                  <VStack textAlign="center">
+                    <EmptyState.Title>
+                      No result matches
+                    </EmptyState.Title>
+                    <EmptyState.Description>
+                      Try adjust your search criteria
+                    </EmptyState.Description>
+                  </VStack>
+                </EmptyState.Content>
+              </EmptyState.Root>
+            )
+      }
+    </Box>
   )
 }
