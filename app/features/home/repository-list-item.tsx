@@ -19,8 +19,8 @@ const { format: dateFormat } = Intl.DateTimeFormat(undefined, {
 })
 
 export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
-  const updatedAt = useMemo(() => dateFormat(new Date(repo.updatedAt)), [repo.updatedAt])
-  const updatedAtAgo = useMemo(() => format(repo.updatedAt), [repo.updatedAt])
+  const updatedAt = useMemo(() => dateFormat(new Date(repo.pushedAt ?? repo.updatedAt)), [repo.pushedAt, repo.updatedAt])
+  const updatedAtAgo = useMemo(() => format(repo.pushedAt ?? repo.updatedAt), [repo.pushedAt, repo.updatedAt])
   const [searchParams] = useSearchParams()
   const textQuery = searchParams.get(TEXT_QUERY_KEY) ?? ''
 
