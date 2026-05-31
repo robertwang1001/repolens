@@ -20,7 +20,7 @@ export default function RepositoryList() {
       {
         repos.length > 0
           ? (
-              <SimpleGrid gap={4} minChildWidth="xs">
+              <SimpleGrid gap={2} minChildWidth="sm">
                 <For each={repos}>
                   {repo => <RepositoryListItem key={repo.id} repo={repo} />}
                 </For>

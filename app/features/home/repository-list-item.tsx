@@ -100,7 +100,11 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
       </Card.Body>
       <Card.Footer justifyContent="flex-end">
         <Tooltip content={updatedAt}>
-          <Text fontSize="sm" color="fg.muted">{updatedAtAgo}</Text>
+          <Text fontSize="sm" color="fg.muted">
+            Updated
+            {' '}
+            {updatedAtAgo}
+          </Text>
         </Tooltip>
         <Tooltip content="Working in Progress...">
           <Button variant="outline" disabled>
