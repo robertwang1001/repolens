@@ -1,5 +1,5 @@
 import type { RepoSearchPageResult } from '~/types/repo-search'
-import { Button, CloseButton, HStack, Input, InputGroup, Spinner } from '@chakra-ui/react'
+import { Button, CloseButton, HStack, Input, InputGroup } from '@chakra-ui/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { LuSearch } from 'react-icons/lu'
 import { useFetcher, useSearchParams } from 'react-router'
@@ -73,8 +73,8 @@ export default function SearchInput() {
     : undefined
 
   return (
-    <HStack maxW="3xl">
-      <InputGroup startElement={fetcher.state === 'loading' ? <Spinner /> : <LuSearch size="22" />} endElement={endElement}>
+    <HStack w="full">
+      <InputGroup endElement={endElement}>
         <Input
           ref={inputRef}
           type="text"
@@ -94,6 +94,7 @@ export default function SearchInput() {
         />
       </InputGroup>
       <Button onClick={() => updateSearchParamQuery(textQuery)} size="xl" bg="bg.subtle" variant="outline" disabled={fetcher.state === 'loading'}>
+        <LuSearch />
         Search
       </Button>
     </HStack>

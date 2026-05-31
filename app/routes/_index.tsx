@@ -27,7 +27,7 @@ export default function Home() {
   return (
     <Stack gap={[8, 12]} minH="100vh">
       <Container maxW="8xl">
-        <Stack pt={[4, 8]} gap={[4, 8]} w="full" alignItems="center">
+        <Stack pt={[4, 8]} gap={[4, 8]} w="full">
           <Stack alignItems="center">
             <HStack>
               <ClientOnly fallback={<Skeleton boxSize={['36px', '44px']} />}>
@@ -37,7 +37,11 @@ export default function Home() {
             </HStack>
             <Heading color="fg.muted" fontWeight="normal" size={['sm', 'lg']} textAlign="center">{APP_DESCRIPTION}</Heading>
           </Stack>
-          <SearchInput />
+          <HStack justifyContent="center">
+            <HStack w="2xl" flexShrink={1}>
+              <SearchInput />
+            </HStack>
+          </HStack>
         </Stack>
       </Container>
       <Container maxW="8xl" flexGrow={1}>
