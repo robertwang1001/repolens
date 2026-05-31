@@ -1,18 +1,16 @@
-# Welcome to React Router!
+<h1 align="center">Welcome to Repo Lens 👋</h1>
 
-A modern, production-ready template for building full-stack React applications using React Router.
+![GitHub License](https://img.shields.io/github/license/robertwang1001/repolens)
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/robertwang1001/repolens)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/robertwang1001/repolens/release.yaml)
+![GitHub Release](https://img.shields.io/github/v/release/robertwang1001/repolens)
+![GitHub Release Date](https://img.shields.io/github/release-date/robertwang1001/repolens)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/robertwang1001/repolens)
+![GitHub watchers](https://img.shields.io/github/watchers/robertwang1001/repolens)
+![GitHub forks](https://img.shields.io/github/forks/robertwang1001/repolens)
+![GitHub Repo stars](https://img.shields.io/github/stars/robertwang1001/repolens)
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
-
-## Features
-
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+Search GitHub repos. Open any README in a structured, readable view.
 
 ## Getting Started
 
@@ -21,7 +19,7 @@ A modern, production-ready template for building full-stack React applications u
 Install the dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### Development
@@ -29,59 +27,26 @@ npm install
 Start the development server with HMR:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+The application will be available at `http://localhost:2000`.
 
 ## Building for Production
 
 Create a production build:
 
 ```bash
-npm run build
+pnpm build
 ```
 
-## Deployment
+## Contributing
 
-### Docker Deployment
+Contributions are welcome! If you have ideas, bug fixes, or improvements, please open an issue or submit a pull request on the
+[GitHub repository](https://github.com/robertwang1001/tmpl-base).
 
-To build and run using Docker:
+Give a ⭐️ if this project helped you!
 
-```bash
-docker build -t my-app .
+## License
 
-# Run the container
-docker run -p 3000:3000 my-app
-```
-
-The containerized application can be deployed to any platform that supports Docker, including:
-
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
-
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
-```
-
-## Styling
-
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
-
----
-
-Built with ❤️ using React Router.
+This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
