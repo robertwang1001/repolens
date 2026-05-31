@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/robertwang1001/sindresorhus/compare/v1.0.2...v1.0.3) (2026-05-31)
+
+
+### Bug Fixes
+
+* sync search param with input when back/forward navi ([2969916](https://github.com/robertwang1001/sindresorhus/commit/29699169f0f8f737fa72177738d57d5dcbf25ea1))
+* update to general repo search ([fc636fb](https://github.com/robertwang1001/sindresorhus/commit/fc636fb167f347696c5fb08b4b96d372d87be802))
+
 ## [1.0.2](https://github.com/robertwang1001/sindresorhus/compare/v1.0.1...v1.0.2) (2026-05-29)
 
 
