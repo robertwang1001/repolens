@@ -5,13 +5,17 @@ import { LuSearch } from 'react-icons/lu'
 import { useFetcher, useSearchParams } from 'react-router'
 import { toaster } from '~/components/ui/toaster'
 import { TEXT_QUERY_KEY } from '~/lib/constants'
+import { logger } from '~/lib/logger'
+
+const log = logger.getChild('Search Input')
 
 function useSearch(query = '') {
-  // Search
   const fetcher = useFetcher<RepoSearchPageResult>({ key: 'search' })
   const search = async (query: string) => {
+    log.debug`Start to search with query: ${query}`
     try {
       await fetcher.load(`/api/search?textQuery=${encodeURIComponent(query)}`)
+      log.debug`Finish search with query: ${query}`
     }
     catch (error) {
       toaster.create({

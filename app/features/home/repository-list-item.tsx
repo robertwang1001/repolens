@@ -1,11 +1,14 @@
+import type { HighlightProps } from '@chakra-ui/react'
 import type { RepoListItem } from '~/types/repo-search'
-import { Box, Button, Card, Heading, HStack, Link, Text } from '@chakra-ui/react'
+import { Avatar, Box, Button, Card, Heading, Highlight, HStack, Link, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { AiOutlineRead } from 'react-icons/ai'
 import { GoLaw } from 'react-icons/go'
 import { LuGitFork, LuStar } from 'react-icons/lu'
+import { useSearchParams } from 'react-router'
 import { format } from 'timeago.js'
 import { Tooltip } from '~/components/ui/tooltip'
+import { TEXT_QUERY_KEY } from '~/lib/constants'
 
 const { format: dateFormat } = Intl.DateTimeFormat(undefined, {
   year: 'numeric',
@@ -18,19 +21,45 @@ const { format: dateFormat } = Intl.DateTimeFormat(undefined, {
 export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
   const updatedAt = useMemo(() => dateFormat(new Date(repo.updatedAt)), [repo.updatedAt])
   const updatedAtAgo = useMemo(() => format(repo.updatedAt), [repo.updatedAt])
+  const [searchParams] = useSearchParams()
+  const textQuery = searchParams.get(TEXT_QUERY_KEY) ?? ''
+
+  const HighlightText = ({ children, ...props }: Omit<HighlightProps, 'query'>) => (
+    <Highlight {...props} query={textQuery.split(' ')} styles={{ bg: 'gray.muted', px: '0.5' }} ignoreCase>
+      { children }
+    </Highlight>
+  )
 
   return (
     <Card.Root>
       <Card.Header>
-        <Box>
-          <Link href={repo.url} target="_blank" rel="noopener noreferrer" maxW="full">
-            <Heading size="xl" truncate>{repo.name}</Heading>
+        <HStack>
+          <Link variant="plain" href={repo.owner.url} target="_blank" rel="noopener noreferrer">
+            <Avatar.Root size="xs">
+              <Avatar.Fallback name={repo.owner.login} />
+              <Avatar.Image src={repo.owner.avatarUrl} />
+            </Avatar.Root>
           </Link>
-        </Box>
+          <Box flexGrow={1} minW={0}>
+            <Link href={repo.url} target="_blank" rel="noopener noreferrer" maxW="full">
+              <Heading size="xl" truncate>
+                {repo.owner.login}
+                /
+                <HighlightText>
+                  {repo.name}
+                </HighlightText>
+              </Heading>
+            </Link>
+          </Box>
+        </HStack>
       </Card.Header>
       <Card.Body gap="4">
         <Card.Description lineClamp={3} flexGrow={1} fontWeight="semibold">
-          {repo.description}
+          {repo.description && (
+            <HighlightText>
+              {repo.description}
+            </HighlightText>
+          )}
         </Card.Description>
         <HStack gap={4} fontSize="xs" color="fg.muted">
           { repo.primaryLanguage && (
@@ -57,7 +86,9 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
           </Link>
           { repo.licenseInfo && (
             <HStack gap={1} flexGrow={1} minW={0}>
-              <GoLaw size="14" />
+              <Box flexShrink={0}>
+                <GoLaw size="14" />
+              </Box>
               <Text textWrap="nowrap" truncate>
                 { repo.licenseInfo.spdxId }
                 {' '}
