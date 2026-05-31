@@ -1,5 +1,5 @@
 {
-  "name": "sindresorhus",
+  "name": "repo-lens",
   "type": "module",
   "version": "1.0.3",
   "private": true,
@@ -11,12 +11,12 @@
   },
   "index": "./dist/index.js",
   "license": "MIT",
-  "homepage": "https://github.com/robertwang1001/sindresorhus#readme",
+  "homepage": "https://github.com/robertwang1001/repolens#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/robertwang1001/sindresorhus.git"
+    "url": "https://github.com/robertwang1001/repolens.git"
   },
-  "bugs": "https://github.com/robertwang1001/sindresorhus/issues",
+  "bugs": "https://github.com/robertwang1001/repolens/issues",
   "engines": {
     "node": ">=24"
   },
