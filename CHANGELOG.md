@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/robertwang1001/repolens/compare/v1.0.3...v1.0.4) (2026-05-31)
+
+
+### Bug Fixes
+
+* update project name ([5823e23](https://github.com/robertwang1001/repolens/commit/5823e236090a3000811af6438e90b72dba26472f))
+
 ## [1.0.3](https://github.com/robertwang1001/sindresorhus/compare/v1.0.2...v1.0.3) (2026-05-31)
 
 
