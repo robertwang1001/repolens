@@ -61,6 +61,7 @@ export default function SearchInput() {
         <CloseButton
           size="md"
           onClick={() => {
+            setTextQuery('')
             updateSearchParamQuery('')
             inputRef.current?.focus()
           }}
