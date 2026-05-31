@@ -17,7 +17,6 @@ export const SEARCH_REPOS = /* GraphQL */ `
         ... on Repository {
           id
           name
-          nameWithOwner
           url
           description
 
@@ -44,6 +43,14 @@ export const SEARCH_REPOS = /* GraphQL */ `
 
           licenseInfo {
             spdxId
+          }
+
+          repositoryTopics(first: 5) {
+            nodes {
+              topic {
+                name
+              }
+            }
           }
         }
       }

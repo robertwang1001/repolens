@@ -1,10 +1,10 @@
 import type { HighlightProps } from '@chakra-ui/react'
 import type { RepoListItem } from '~/types/repo-search'
-import { Avatar, Box, Button, Card, Heading, Highlight, HStack, Link, Text } from '@chakra-ui/react'
+import { Avatar, Badge, Box, Button, Card, For, Heading, Highlight, HStack, Link, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
 import { AiOutlineRead } from 'react-icons/ai'
 import { GoLaw } from 'react-icons/go'
-import { LuGitFork, LuStar } from 'react-icons/lu'
+import { LuExternalLink, LuGitFork, LuStar } from 'react-icons/lu'
 import { useSearchParams } from 'react-router'
 import { format } from 'timeago.js'
 import { Tooltip } from '~/components/ui/tooltip'
@@ -34,12 +34,10 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
     <Card.Root>
       <Card.Header>
         <HStack>
-          <Link variant="plain" href={repo.owner.url} target="_blank" rel="noopener noreferrer">
-            <Avatar.Root size="xs">
-              <Avatar.Fallback name={repo.owner.login} />
-              <Avatar.Image src={repo.owner.avatarUrl} />
-            </Avatar.Root>
-          </Link>
+          <Avatar.Root size="xs">
+            <Avatar.Fallback name={repo.owner.login} />
+            <Avatar.Image src={repo.owner.avatarUrl} />
+          </Avatar.Root>
           <Box flexGrow={1} minW={0}>
             <Link href={repo.url} target="_blank" rel="noopener noreferrer" maxW="full">
               <Heading size="xl" truncate>
@@ -49,6 +47,9 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
                   {repo.name}
                 </HighlightText>
               </Heading>
+              <Box flexShrink={0} color="fg.muted">
+                <LuExternalLink />
+              </Box>
             </Link>
           </Box>
         </HStack>
@@ -61,6 +62,13 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
             </HighlightText>
           )}
         </Card.Description>
+        {(repo.repositoryTopics?.nodes && repo.repositoryTopics.nodes.length > 0) && (
+          <HStack flexWrap="wrap">
+            <For each={repo.repositoryTopics.nodes.map(n => n.topic?.name).filter(Boolean)}>
+              {(item, index) => <Badge key={index}>{ item }</Badge>}
+            </For>
+          </HStack>
+        )}
         <HStack gap={4} fontSize="xs" color="fg.muted">
           { repo.primaryLanguage && (
             <HStack gap={1}>
@@ -68,22 +76,18 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
               <Text>{ repo.primaryLanguage.name }</Text>
             </HStack>
           )}
-          <Link href={`${repo.url}/stargazers`} target="_blank" rel="noopener noreferrer">
-            <HStack gap={1} color="fg.muted">
-              <LuStar size="14" />
-              <Text>
-                {repo.stargazerCount.toLocaleString()}
-              </Text>
-            </HStack>
-          </Link>
-          <Link href={`${repo.url}/forks`} target="_blank" rel="noopener noreferrer">
-            <HStack gap={1} color="fg.muted">
-              <LuGitFork size="14" />
-              <Text>
-                {repo.forkCount.toLocaleString()}
-              </Text>
-            </HStack>
-          </Link>
+          <HStack gap={1} color="fg.muted">
+            <LuStar size="14" />
+            <Text>
+              {repo.stargazerCount.toLocaleString()}
+            </Text>
+          </HStack>
+          <HStack gap={1} color="fg.muted">
+            <LuGitFork size="14" />
+            <Text>
+              {repo.forkCount.toLocaleString()}
+            </Text>
+          </HStack>
           { repo.licenseInfo && (
             <HStack gap={1} flexGrow={1} minW={0}>
               <Box flexShrink={0}>

@@ -52,7 +52,6 @@ export interface RepoListItem {
   id: string
 
   name: string
-  nameWithOwner: string
   url: string
 
   description?: string | null
@@ -71,6 +70,18 @@ export interface RepoListItem {
 
   primaryLanguage?: PrimaryLanguage | null
   licenseInfo?: LicenseInfo | null
+
+  /**
+   * GitHub "Topics" for the repository — great as keyword chips.
+   * Example: ["deno", "typescript", "runtime"]
+   */
+  repositoryTopics?: {
+    nodes?: {
+      topic?: {
+        name: string
+      }
+    }[]
+  }
 }
 
 /**
