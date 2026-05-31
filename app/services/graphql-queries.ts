@@ -1,8 +1,9 @@
 /**
  * GraphQL query to search repositories.
  *
- * @remarks
- * `search.nodes` is a union so we use `... on Repository`.
+ * IMPORTANT:
+ * - With @octokit/graphql, DON'T name your variable "query".
+ * - Use "searchQuery" (or anything else).
  */
 export const SEARCH_REPOS = /* GraphQL */ `
   query SearchRepos($searchQuery: String!, $first: Int!, $after: String) {

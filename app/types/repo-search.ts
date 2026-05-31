@@ -1,50 +1,60 @@
 /**
- * Common sort keys for GitHub repository search.
+ * Sorting options supported by GitHub repo search.
+ *
+ * - "best" means "let GitHub decide relevance" (no explicit sort qualifier added).
+ * - Other keys translate to: sort:<key>-<dir>
  */
 export type RepoSearchSortKey = 'best' | 'updated' | 'stars' | 'forks'
 
 /**
- * Search scope for the free-text portion of a search query.
- */
-export type RepoSearchScope = 'narrow' | 'broad'
-
-/**
- * Sort direction for GitHub search `sort:<key>-<dir>`.
+ * Sort direction for GitHub's search sort qualifier.
  */
 export type SortDirection = 'asc' | 'desc'
 
 /**
- * Minimal language info useful for UI display.
+ * Minimal language info useful for a repo card/list UI.
  */
 export interface PrimaryLanguage {
+  /** Language name, e.g. "TypeScript" */
   name: string
+
+  /** GitHub language color (hex), can be null */
   color?: string | null
 }
 
 /**
- * Repo owner info useful for UI display.
+ * Minimal owner info useful for UI display.
  */
 export interface RepoOwner {
+  /** Username or org name, e.g. "vercel" */
   login: string
+
+  /** Avatar image URL */
   avatarUrl: string
+
+  /** Profile URL */
   url: string
 }
 
 /**
- * License info useful for UI display.
+ * Minimal license info.
  */
 export interface LicenseInfo {
+  /** SPDX identifier, e.g. "MIT" */
   spdxId?: string | null
 }
 
 /**
- * Fields chosen to be "useful & necessary" for a repo list UI.
+ * A compact repo item that is enough for most UIs
+ * (list rows, cards, etc.)
  */
 export interface RepoListItem {
   id: string
+
   name: string
   nameWithOwner: string
   url: string
+
   description?: string | null
 
   owner: RepoOwner
@@ -72,32 +82,64 @@ export interface PageInfo {
 }
 
 /**
- * Result returned from a single page search request.
+ * One page of repo search results.
  */
 export interface RepoSearchPageResult {
-  /** Final GitHub search string sent to GraphQL (useful for debugging/power users). */
+  /**
+   * The final query string sent to GitHub search.
+   * This is extremely useful for debugging and "power user" UI.
+   */
   queryString: string
 
+  /** Total count for the search across all pages */
   repositoryCount: number
+
+  /** Cursor pagination data */
   pageInfo: PageInfo
+
+  /** Repo nodes for this page */
   repos: RepoListItem[]
 }
 
 /**
- * Options to request a page of results.
+ * Search options your UI passes into the client.
  */
 export interface RepoSearchOptions {
-  login: string
+  /**
+   * Optional user/org scope:
+   * - If set, we add `user:<login>` to the query.
+   * - If empty/undefined, we search globally.
+   *
+   * Note: GitHub uses `user:` for both users and orgs in search qualifiers.
+   */
+  login?: string
+
+  /**
+   * Free text the user types, e.g. "react table".
+   * This is appended as-is (after trimming).
+   */
   textQuery?: string
 
-  scope?: RepoSearchScope
+  /**
+   * Extra qualifiers as key/value pairs.
+   * Examples:
+   * - { language: "TypeScript", stars: ">500", fork: false }
+   *
+   * This gives you a structured UI while still leveraging GitHub qualifiers.
+   */
+  qualifiers?: Record<string, string | number | boolean>
 
+  /**
+   * Sort behavior:
+   * - "best": don't add explicit sort qualifier (GitHub decides relevance).
+   * - otherwise: add sort:<key>-<dir>
+   */
   sortKey?: RepoSearchSortKey
   sortDir?: SortDirection
 
-  /** Page size; defaults handled by caller/client. */
+  /** Page size (GitHub caps apply). */
   first?: number
 
-  /** Cursor for next page */
+  /** Cursor for next page. */
   after?: string | null
 }

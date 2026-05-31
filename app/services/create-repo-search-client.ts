@@ -1,61 +1,61 @@
 import type { Octokit } from 'octokit'
 import type { TTLCache } from '~/lib/ttl-cache'
 import type { RepoListItem, RepoSearchOptions, RepoSearchPageResult } from '~/types/repo-search'
-import { debounceAsync } from '~/lib/debounce-async'
 import { buildRepoSearchQuery } from './build-repo-search-query'
 import { SEARCH_REPOS } from './graphql-queries'
 
 /**
- * Create a repo search client.
+ * Create a repo search client that:
+ * - builds the GitHub query string
+ * - executes the GraphQL search
+ * - caches results by (queryString + pagination cursor)
  *
- * @remarks
- * This concentrates:
- * - auth / octokit dependency
- * - caching
- * - GraphQL query execution
- *
- * So your UI only calls `client.searchOwnedReposPage(...)`.
+ * Keep this logic out of your UI so components stay simple.
  */
 export function createRepoSearchClient(params: {
+  /** Authenticated Octokit instance */
   octokit: Octokit
-  cache: TTLCache<RepoSearchPageResult>
-  debounceMs?: number
-}) {
-  const debounceMs = params.debounceMs ?? 300
 
+  /** TTL cache to reduce rate-limit usage */
+  cache: TTLCache<RepoSearchPageResult>
+}) {
   /**
-   * Search owned repositories and return one page.
+   * Search repositories and return exactly one page.
    *
-   * @remarks
-   * - Cursor pagination: pass `after` from the previous response to get the next page.
-   * - Default page size is 12 (if not provided).
-   * - Results are cached by `{queryString, first, after}`.
+   * Typical UI flow:
+   * - Call with after=null for page 1
+   * - Use result.pageInfo.endCursor as `after` for next page
    */
-  async function searchOwnedReposPage(options: RepoSearchOptions): Promise<RepoSearchPageResult> {
+  async function searchReposPage(options: RepoSearchOptions): Promise<RepoSearchPageResult> {
     const {
       login,
       textQuery = '',
-      scope = 'narrow',
-      sortKey = 'updated',
+      qualifiers = {},
+      sortKey = 'best',
       sortDir = 'desc',
       first = 12,
       after = null,
     } = options
 
+    // Build the query string that GitHub search understands.
     const queryString = buildRepoSearchQuery({
       login,
       textQuery,
-      scope,
+      qualifiers,
       sortKey,
       sortDir,
-      includeForks: false,
     })
 
+    // Cache key: must include everything that affects results.
     const cacheKey = JSON.stringify({ queryString, first, after })
+
+    // Fast path: serve from cache.
     const cached = params.cache.get(cacheKey)
     if (cached)
       return cached
 
+    // Execute GraphQL call.
+    // NOTE: variable name is `searchQuery`, not `query` (Octokit restriction).
     const res = await params.octokit.graphql<{
       search: {
         repositoryCount: number
@@ -64,6 +64,7 @@ export function createRepoSearchClient(params: {
       }
     }>(SEARCH_REPOS, { searchQuery: queryString, first, after })
 
+    // Normalize the response into our own stable shape.
     const payload: RepoSearchPageResult = {
       queryString,
       repositoryCount: res.search.repositoryCount,
@@ -71,24 +72,15 @@ export function createRepoSearchClient(params: {
         hasNextPage: res.search.pageInfo.hasNextPage,
         endCursor: res.search.pageInfo.endCursor ?? null,
       },
+      // `nodes` can include nulls; filter them out.
       repos: (res.search.nodes ?? []).filter((n): n is RepoListItem => Boolean(n)),
     }
 
+    // Store in cache.
     params.cache.set(cacheKey, payload)
+
     return payload
   }
 
-  /**
-   * Debounced version of `searchOwnedReposPage`.
-   *
-   * @remarks
-   * Use this for "search as you type" inputs.
-   * If the user keeps typing, older pending calls are rejected.
-   */
-  const searchOwnedReposPageDebounced = debounceAsync(searchOwnedReposPage, debounceMs)
-
-  return {
-    searchOwnedReposPage,
-    searchOwnedReposPageDebounced,
-  }
+  return { searchReposPage }
 }
