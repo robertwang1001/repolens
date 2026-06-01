@@ -1,10 +1,13 @@
 import type { RepoSearchPageResult } from '~/types/repo-search'
 import { Box, Center, ClientOnly, Container, Heading, HStack, Skeleton, Spinner, Stack, Text } from '@chakra-ui/react'
+import { useEffect, useState } from 'react'
 import { useFetcher } from 'react-router'
 import Logo from '~/components/shared/logo'
+import LogoCore from '~/components/shared/logo-core'
 import { ColorModeButton } from '~/components/ui/color-mode'
 import RepositoryList from '~/features/home/repository-list'
 import SearchInput from '~/features/home/search-input'
+import Toolbar from '~/features/home/toolbar'
 import { APP_DESCRIPTION, APP_TITLE, APP_VERSION } from '~/lib/constants'
 
 export function meta() {
@@ -16,7 +19,7 @@ export function meta() {
 
 function CenterSpinner() {
   return (
-    <Center>
+    <Center flexGrow={1}>
       <Spinner size="xl" />
     </Center>
   )
@@ -24,13 +27,20 @@ function CenterSpinner() {
 
 export default function Home() {
   const fetcher = useFetcher<RepoSearchPageResult>({ key: 'search' })
+  const [firstTimeLoad, setFirstTimeLoad] = useState(true)
+  useEffect(() => {
+    if (fetcher.data) {
+      setFirstTimeLoad(false)
+    }
+  }, [fetcher])
+
   return (
     <Stack gap={[8, 12]} minH="100vh">
       <Container maxW="8xl">
         <Stack pt={[4, 8]} gap={[4, 8]} w="full">
           <Stack alignItems="center">
             <HStack>
-              <ClientOnly fallback={<Skeleton boxSize={['36px', '44px']} />}>
+              <ClientOnly fallback={<LogoCore logoUrl="/logo.png" />}>
                 <Logo />
               </ClientOnly>
               <Heading as="h1" size={['xl', '3xl']}>{APP_TITLE}</Heading>
@@ -44,10 +54,15 @@ export default function Home() {
           </HStack>
         </Stack>
       </Container>
-      <Container maxW="8xl" flexGrow={1}>
-        <ClientOnly fallback={<CenterSpinner />}>
-          <RepositoryList />
-        </ClientOnly>
+      <Container maxW="8xl" flexGrow={1} minH={0} display="flex" flexDirection="column">
+        <Stack gap={[2, 4]} flexGrow={1}>
+          <ClientOnly fallback={<Skeleton h="24px" w="210px" />}>
+            <Toolbar />
+          </ClientOnly>
+          <ClientOnly fallback={<CenterSpinner />}>
+            { firstTimeLoad ? <CenterSpinner /> : <RepositoryList />}
+          </ClientOnly>
+        </Stack>
       </Container>
       <Box borderTopWidth={1} borderColor="border.muted">
         <Container maxW="8xl">

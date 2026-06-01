@@ -6,7 +6,6 @@ import { TEXT_QUERY_KEY } from '~/lib/constants'
 import { logger } from '~/lib/logger'
 import RepositoryListEmpty from './repository-list-empty'
 import RepositoryListItem from './repository-list-item'
-import RepositoryListToolbar from './repository-list-toolbar'
 
 const log = logger.getChild('Repository List')
 
@@ -47,30 +46,27 @@ export default function RepositoryList() {
   }
 
   return (
-    <Stack gap={[2, 4]}>
-      <RepositoryListToolbar />
-      <Stack gap="4">
-        {
-          repos.length > 0
-            ? (
-                <>
-                  <SimpleGrid gap={[2, 4]} minChildWidth={['xs', 'sm']}>
-                    <For each={repos}>
-                      {repo => <RepositoryListItem key={repo.id} repo={repo} />}
-                    </For>
-                  </SimpleGrid>
-                  {fetcher.data?.pageInfo.hasNextPage && fetcher.data?.pageInfo.endCursor && (
-                    <HStack justifyContent="center">
-                      <Button variant="subtle" disabled={fetcher.state === 'loading'} onClick={loadMore}>{ fetcher.state === 'loading' ? <Spinner /> : 'Load more' }</Button>
-                    </HStack>
-                  )}
-                </>
-              )
-            : (
-                <RepositoryListEmpty />
-              )
-        }
-      </Stack>
+    <Stack gap="4">
+      {
+        fetcher.data?.repositoryCount ?? -1 > 0
+          ? (
+              <>
+                <SimpleGrid gap={[2, 4]} minChildWidth={['xs', 'sm']}>
+                  <For each={repos}>
+                    {repo => <RepositoryListItem key={repo.id} repo={repo} />}
+                  </For>
+                </SimpleGrid>
+                {searchParams.size > 0 && fetcher.data?.pageInfo.hasNextPage && fetcher.data?.pageInfo.endCursor && (
+                  <HStack justifyContent="center">
+                    <Button variant="subtle" disabled={fetcher.state === 'loading'} onClick={loadMore}>{ fetcher.state === 'loading' ? <Spinner /> : 'Load more' }</Button>
+                  </HStack>
+                )}
+              </>
+            )
+          : (
+              <RepositoryListEmpty />
+            )
+      }
     </Stack>
   )
 }
