@@ -46,7 +46,7 @@ export default function Home() {
       </Container>
       <Container maxW="8xl" flexGrow={1}>
         <ClientOnly fallback={<CenterSpinner />}>
-          {fetcher.state === 'loading' ? <CenterSpinner /> : <RepositoryList />}
+          <RepositoryList />
         </ClientOnly>
       </Container>
       <Box borderTopWidth={1} borderColor="border.muted">

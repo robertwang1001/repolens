@@ -74,6 +74,7 @@ export function createRepoSearchClient(params: {
       },
       // `nodes` can include nulls; filter them out.
       repos: (res.search.nodes ?? []).filter((n): n is RepoListItem => Boolean(n)),
+      isFirstFetch: !after,
     }
 
     // Store in cache.

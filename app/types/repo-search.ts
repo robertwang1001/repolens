@@ -110,6 +110,9 @@ export interface RepoSearchPageResult {
 
   /** Repo nodes for this page */
   repos: RepoListItem[]
+
+  /** If this search is the first time fetch or not */
+  isFirstFetch?: boolean
 }
 
 /**
