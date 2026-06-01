@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.1.0](https://github.com/robertwang1001/repolens/compare/v1.0.4...v1.1.0) (2026-06-01)
+
+
+### Features
+
+* **repo list item:** add keywords(topics) ([71defee](https://github.com/robertwang1001/repolens/commit/71defee9ab1c8d5513f2308bf424ffe5f5188886))
+* **repo list item:** hightlight query in title and description ([c36b5bf](https://github.com/robertwang1001/repolens/commit/c36b5bfd0257387e997ab48b6d55db70eacc4b5f))
+* **repo list item:** keywords link as text queries ([06a8089](https://github.com/robertwang1001/repolens/commit/06a8089831dc678d756359e082b8c21d5f5c636e))
+
+
+### Bug Fixes
+
+* **repo list item:** use pushedAt ([869d465](https://github.com/robertwang1001/repolens/commit/869d46591b6b83d409e86774757eae5030155b3b))
+* **repo list:** update grid layout ([c660517](https://github.com/robertwang1001/repolens/commit/c660517ecbdc5a898167cc1794b68598a89e6693))
+* search input clear ([30193ab](https://github.com/robertwang1001/repolens/commit/30193abfeae86894b5c6afc1a391d25eb34f6e92))
+* search input width ([2bb337c](https://github.com/robertwang1001/repolens/commit/2bb337cf42172c9609437e1ac6a466a9a747e692))
+
 ## [1.0.4](https://github.com/robertwang1001/repolens/compare/v1.0.3...v1.0.4) (2026-05-31)
 
 
