@@ -66,8 +66,8 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
           <HStack flexWrap="wrap">
             <For each={repo.repositoryTopics.nodes.map(n => n.topic?.name).filter(Boolean)}>
               {(item, index) => (
-                <ReactRouterLink to={`/?${TEXT_QUERY_KEY}=${item}`}>
-                  <Badge key={index} _hover={{ bgColor: 'blue.muted' }}>{ item }</Badge>
+                <ReactRouterLink to={`/?${TEXT_QUERY_KEY}=${item}`} key={index}>
+                  <Badge _hover={{ bgColor: 'blue.muted' }}>{ item }</Badge>
                 </ReactRouterLink>
               )}
             </For>
