@@ -5,7 +5,7 @@ import { useMemo } from 'react'
 import { AiOutlineRead } from 'react-icons/ai'
 import { GoLaw } from 'react-icons/go'
 import { LuExternalLink, LuGitFork, LuStar } from 'react-icons/lu'
-import { useSearchParams } from 'react-router'
+import { Link as ReactRouterLink, useSearchParams } from 'react-router'
 import { format } from 'timeago.js'
 import { Tooltip } from '~/components/ui/tooltip'
 import { TEXT_QUERY_KEY } from '~/lib/constants'
@@ -65,7 +65,11 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
         {(repo.repositoryTopics?.nodes && repo.repositoryTopics.nodes.length > 0) && (
           <HStack flexWrap="wrap">
             <For each={repo.repositoryTopics.nodes.map(n => n.topic?.name).filter(Boolean)}>
-              {(item, index) => <Badge key={index}>{ item }</Badge>}
+              {(item, index) => (
+                <ReactRouterLink to={`/?${TEXT_QUERY_KEY}=${item}`}>
+                  <Badge key={index} _hover={{ bgColor: 'blue.muted' }}>{ item }</Badge>
+                </ReactRouterLink>
+              )}
             </For>
           </HStack>
         )}
