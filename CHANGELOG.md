@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://github.com/robertwang1001/repolens/compare/v1.1.0...v1.2.0) (2026-06-02)
+
+
+### Features
+
+* **repo list:** support loading more ([3300107](https://github.com/robertwang1001/repolens/commit/3300107d91766561e2344e4d0c80a33d6dd8a698))
+* show repo count ([c7f8d05](https://github.com/robertwang1001/repolens/commit/c7f8d0558f721aadab9253973501b2baf1cd23de))
+
+
+### Bug Fixes
+
+* add reponse cache ([5fcaef8](https://github.com/robertwang1001/repolens/commit/5fcaef8caffb06b0a4c8fe04acac9e8344987dfb))
+* **repo list:** show empty state at proper time ([c20e397](https://github.com/robertwang1001/repolens/commit/c20e3978f7bed6bb25bace586fcf3e0c5a53140f))
+
 ## [1.1.0](https://github.com/robertwang1001/repolens/compare/v1.0.4...v1.1.0) (2026-06-01)
 
 
