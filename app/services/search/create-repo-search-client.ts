@@ -1,8 +1,12 @@
 import type { Octokit } from 'octokit'
-import type { TTLCache } from '~/lib/ttl-cache'
 import type { RepoListItem, RepoSearchOptions, RepoSearchPageResult } from '~/types/repo-search'
 import { buildRepoSearchQuery } from './build-repo-search-query'
 import { SEARCH_REPOS } from './graphql-queries'
+
+interface Cache<T> {
+  get: (key: string) => T | undefined
+  set: (key: string, value: T) => void
+}
 
 /**
  * Create a repo search client that:
@@ -16,8 +20,8 @@ export function createRepoSearchClient(params: {
   /** Authenticated Octokit instance */
   octokit: Octokit
 
-  /** TTL cache to reduce rate-limit usage */
-  cache: TTLCache<RepoSearchPageResult>
+  /** Cache to reduce rate-limit usage */
+  cache: Cache<RepoSearchPageResult>
 }) {
   /**
    * Search repositories and return exactly one page.

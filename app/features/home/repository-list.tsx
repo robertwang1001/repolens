@@ -1,7 +1,8 @@
-import type { RepoListItem, RepoSearchPageResult } from '~/types/repo-search'
+import type { RepoListItem } from '~/types/repo-search'
 import { Button, For, HStack, SimpleGrid, Spinner, Stack } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { useFetcher, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
+import { useSearch } from '~/hooks/use-search'
 import { TEXT_QUERY_KEY } from '~/lib/constants'
 import { logger } from '~/lib/logger'
 import RepositoryListEmpty from './repository-list-empty'
@@ -12,7 +13,7 @@ const log = logger.getChild('Repository List')
 export default function RepositoryList() {
   const [searchParams] = useSearchParams()
   const [repos, setRepos] = useState<RepoListItem[]>(() => [])
-  const fetcher = useFetcher<RepoSearchPageResult>({ key: 'search' })
+  const { fetcher, search } = useSearch()
 
   useEffect(() => {
     if (fetcher.data) {
@@ -42,7 +43,7 @@ export default function RepositoryList() {
       urlSearchParams.set('after', endCursor)
     }
 
-    await fetcher.load(`/api/search${urlSearchParams.size > 0 ? `?${urlSearchParams.toString()}` : ''}`)
+    await search(urlSearchParams)
   }
 
   return (

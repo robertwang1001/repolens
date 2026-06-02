@@ -1,37 +1,9 @@
-import type { RepoSearchPageResult } from '~/types/repo-search'
 import { Button, CloseButton, HStack, Input, InputGroup, Spinner } from '@chakra-ui/react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { LuSearch } from 'react-icons/lu'
-import { useFetcher, useSearchParams } from 'react-router'
-import { toaster } from '~/components/ui/toaster'
+import { useSearchParams } from 'react-router'
+import { useSearch } from '~/hooks/use-search'
 import { TEXT_QUERY_KEY } from '~/lib/constants'
-import { logger } from '~/lib/logger'
-
-const log = logger.getChild('Search Input')
-
-function useSearch(query = '') {
-  const fetcher = useFetcher<RepoSearchPageResult>({ key: 'search' })
-  const search = async (query: string) => {
-    log.debug`Start to search with query: ${query}`
-    try {
-      await fetcher.load(`/api/search?textQuery=${encodeURIComponent(query)}`)
-      log.debug`Finish search with query: ${query}`
-    }
-    catch (error) {
-      toaster.create({
-        title: 'Error',
-        description: error,
-        type: 'error',
-      })
-    }
-  }
-
-  useEffect(() => {
-    search(query)
-  }, [query])
-
-  return { fetcher }
-}
 
 export default function SearchInput() {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -43,7 +15,10 @@ export default function SearchInput() {
     [searchParams],
   )
 
-  const { fetcher } = useSearch(queryFromUrl)
+  const { search, fetcher } = useSearch()
+  useEffect(() => {
+    search({ textQuery: queryFromUrl })
+  }, [queryFromUrl])
 
   useEffect(() => {
     setTextQuery(queryFromUrl)

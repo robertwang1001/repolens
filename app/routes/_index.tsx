@@ -1,13 +1,12 @@
-import type { RepoSearchPageResult } from '~/types/repo-search'
 import { Box, Center, ClientOnly, Container, Heading, HStack, Skeleton, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
-import { useFetcher } from 'react-router'
 import Logo from '~/components/shared/logo'
 import LogoCore from '~/components/shared/logo-core'
 import { ColorModeButton } from '~/components/ui/color-mode'
 import RepositoryList from '~/features/home/repository-list'
 import SearchInput from '~/features/home/search-input'
 import Toolbar from '~/features/home/toolbar'
+import { useSearch } from '~/hooks/use-search'
 import { APP_DESCRIPTION, APP_TITLE, APP_VERSION } from '~/lib/constants'
 
 export function meta() {
@@ -26,7 +25,7 @@ function CenterSpinner() {
 }
 
 export default function Home() {
-  const fetcher = useFetcher<RepoSearchPageResult>({ key: 'search' })
+  const { fetcher } = useSearch()
   const [firstTimeLoad, setFirstTimeLoad] = useState(true)
   useEffect(() => {
     if (fetcher.data) {
@@ -71,11 +70,11 @@ export default function Home() {
               Made with ❤️ by Sohwi @ 2026
             </Text>
             <HStack>
-              <ColorModeButton />
               <Text>
                 v
                 {APP_VERSION}
               </Text>
+              <ColorModeButton />
             </HStack>
           </HStack>
         </Container>

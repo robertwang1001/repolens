@@ -1,13 +1,13 @@
-import type { RepoSearchPageResult } from '~/types/repo-search'
 import { Em, HStack, Skeleton, Text } from '@chakra-ui/react'
 import { useMemo } from 'react'
-import { useFetcher, useSearchParams } from 'react-router'
+import { useSearchParams } from 'react-router'
+import { useSearch } from '~/hooks/use-search'
 import { TEXT_QUERY_KEY } from '~/lib/constants'
 import { formatCompactNumber } from '~/lib/formatCompactNumber'
 
 export default function Toolbar() {
   const [searchParams] = useSearchParams()
-  const fetcher = useFetcher<RepoSearchPageResult>({ key: 'search' })
+  const { fetcher } = useSearch()
   const count = useMemo(() => formatCompactNumber(fetcher.data?.repositoryCount ?? 0), [fetcher.data?.repositoryCount])
 
   return (
