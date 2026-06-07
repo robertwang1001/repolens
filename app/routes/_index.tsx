@@ -1,7 +1,6 @@
 import { Box, Center, ClientOnly, Container, Heading, HStack, Skeleton, Spinner, Stack, Text } from '@chakra-ui/react'
 import { useEffect, useState } from 'react'
 import Logo from '~/components/shared/logo'
-import LogoCore from '~/components/shared/logo-core'
 import { ColorModeButton } from '~/components/ui/color-mode'
 import RepositoryList from '~/features/home/repository-list'
 import SearchInput from '~/features/home/search-input'
@@ -38,12 +37,7 @@ export default function Home() {
       <Container maxW="8xl">
         <Stack pt={[4, 8]} gap={[4, 8]} w="full">
           <Stack alignItems="center">
-            <HStack>
-              <ClientOnly fallback={<LogoCore logoUrl="/logo.png" />}>
-                <Logo />
-              </ClientOnly>
-              <Heading as="h1" size={['xl', '3xl']}>{APP_TITLE}</Heading>
-            </HStack>
+            <Logo showTitle />
             <Heading color="fg.muted" fontWeight="normal" size={['sm', 'lg']} textAlign="center">{APP_DESCRIPTION}</Heading>
           </Stack>
           <HStack justifyContent="center">

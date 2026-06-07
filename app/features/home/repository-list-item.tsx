@@ -1,7 +1,7 @@
 import type { HighlightProps } from '@chakra-ui/react'
 import type { RepoListItem } from '~/types/repo-search'
 import { Avatar, Badge, Box, Button, Card, For, Heading, Highlight, HStack, Link, Text } from '@chakra-ui/react'
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { AiOutlineRead } from 'react-icons/ai'
 import { GoLaw } from 'react-icons/go'
 import { LuExternalLink, LuGitFork, LuStar } from 'react-icons/lu'
@@ -18,7 +18,7 @@ const { format: dateFormat } = Intl.DateTimeFormat(undefined, {
   minute: 'numeric',
 })
 
-export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
+export default memo(({ repo }: { repo: RepoListItem }) => {
   const updatedAt = useMemo(() => dateFormat(new Date(repo.pushedAt ?? repo.updatedAt)), [repo.pushedAt, repo.updatedAt])
   const updatedAtAgo = useMemo(() => format(repo.pushedAt ?? repo.updatedAt), [repo.pushedAt, repo.updatedAt])
   const [searchParams] = useSearchParams()
@@ -114,13 +114,13 @@ export default function RepositoryListItem({ repo }: { repo: RepoListItem }) {
             {updatedAtAgo}
           </Text>
         </Tooltip>
-        <Tooltip content="Working in Progress...">
-          <Button variant="outline" disabled>
+        <Button variant="outline" asChild>
+          <ReactRouterLink to={`/${repo.owner.login}/${repo.name}`}>
             <AiOutlineRead />
             Readme
-          </Button>
-        </Tooltip>
+          </ReactRouterLink>
+        </Button>
       </Card.Footer>
     </Card.Root>
   )
-}
+})

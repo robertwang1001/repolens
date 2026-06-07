@@ -1,6 +1,6 @@
 import type { RepoListItem } from '~/types/repo-search'
 import { Button, For, HStack, SimpleGrid, Spinner, Stack } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { useSearch } from '~/hooks/use-search'
 import { TEXT_QUERY_KEY } from '~/lib/constants'
@@ -31,7 +31,7 @@ export default function RepositoryList() {
     }
   }, [fetcher.data])
 
-  const loadMore = async () => {
+  const loadMore = useCallback(async () => {
     const urlSearchParams = new URLSearchParams()
     const query = searchParams.get(TEXT_QUERY_KEY)
     const endCursor = fetcher.data?.pageInfo.endCursor
@@ -44,7 +44,7 @@ export default function RepositoryList() {
     }
 
     await search(urlSearchParams)
-  }
+  }, [searchParams, fetcher.data?.pageInfo.endCursor, fetcher.data?.pageInfo.hasNextPage])
 
   return (
     <Stack gap="4">

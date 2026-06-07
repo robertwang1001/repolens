@@ -52,7 +52,7 @@ interface ColorModeButtonProps extends Omit<IconButtonProps, 'aria-label'> {}
 export function ColorModeButton({ ref, ...props }: ColorModeButtonProps & { ref?: React.RefObject<HTMLButtonElement> | null }) {
   const { toggleColorMode } = useColorMode()
   return (
-    <ClientOnly fallback={<Skeleton boxSize="10" />}>
+    <ClientOnly fallback={<Skeleton boxSize="9" />}>
       <IconButton
         onClick={toggleColorMode}
         variant="ghost"

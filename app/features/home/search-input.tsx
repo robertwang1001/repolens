@@ -1,5 +1,5 @@
 import { Button, CloseButton, HStack, Input, InputGroup, Spinner } from '@chakra-ui/react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { LuSearch } from 'react-icons/lu'
 import { useSearchParams } from 'react-router'
 import { useSearch } from '~/hooks/use-search'
@@ -35,15 +35,16 @@ export default function SearchInput() {
   }
 
   // Clear button
+  const clearInput = useCallback(() => {
+    setTextQuery('')
+    updateSearchParamQuery('')
+    inputRef.current?.focus()
+  }, [setTextQuery, updateSearchParamQuery])
   const endElement = textQuery
     ? (
         <CloseButton
           size="md"
-          onClick={() => {
-            setTextQuery('')
-            updateSearchParamQuery('')
-            inputRef.current?.focus()
-          }}
+          onClick={clearInput}
           me="-2"
           _hover={{
             bgColor: 'bg.emphasized',
