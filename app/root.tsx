@@ -1,13 +1,17 @@
 import type { Route } from './+types/root'
 
-import { Container, Heading, Stack, Text } from '@chakra-ui/react'
+import { Button, Container, Heading, HStack, Stack, Text } from '@chakra-ui/react'
+import { useCallback } from 'react'
+import { FaArrowLeft, FaHome } from 'react-icons/fa'
 import {
   isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
+  Link as ReactRouterLink,
   Scripts,
   ScrollRestoration,
+  useNavigate,
 } from 'react-router'
 import { Provider } from './components/ui/provider'
 import './app.css'
@@ -68,13 +72,16 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
     message = error.status === 404 ? '404' : 'Error'
     details
       = error.status === 404
-        ? `The requested page could not be found. ${error.data}`
+        ? `The requested page could not be found. ${error.data.error}`
         : error.statusText || details
   }
   else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message
     stack = error.stack
   }
+
+  const navigate = useNavigate()
+  const navigateBackword = useCallback(() => navigate(-1), [])
 
   return (
     <Container as="main" maxW="8xl" h="vh" display="flex" justifyContent="center" alignItems="center">
@@ -86,6 +93,18 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
             <code>{stack}</code>
           </pre>
         )}
+        <HStack justifyContent="center">
+          <Button asChild variant="outline">
+            <ReactRouterLink to="/">
+              <FaHome />
+              Go Home
+            </ReactRouterLink>
+          </Button>
+          <Button onClick={navigateBackword}>
+            <FaArrowLeft />
+            Back
+          </Button>
+        </HStack>
       </Stack>
     </Container>
   )

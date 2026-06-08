@@ -8,9 +8,14 @@ const log = logger.getChild('useReadmeInfo')
 export function useReadmeInfo() {
   const fetcher = useFetcher<typeof loader>({ key: 'readmeInfo' })
 
-  const load = async (owner: string, repo: string) => {
-    const url = `/api/readme?${new URLSearchParams({ owner, repo }).toString()}`
-    const ownerRepo = `${owner}/${repo}`
+  const load = async (owner: string, repo: string, path?: string) => {
+    const searchParams = new URLSearchParams({ owner, repo })
+    const pathTrimmed = path?.trim()
+    if (pathTrimmed) {
+      searchParams.set('path', pathTrimmed)
+    }
+    const url = `/api/readme?${searchParams.toString()}`
+    const ownerRepo = `${owner}/${repo}${pathTrimmed ? `/${pathTrimmed}` : ''}`
 
     log.debug`Load ${ownerRepo}...`
     try {

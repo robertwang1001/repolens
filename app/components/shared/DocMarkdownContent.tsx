@@ -1,0 +1,99 @@
+import type { InternalUrlContext } from '~/lib/rehypeInternalUrlActions'
+import { Box, Center, Spinner } from '@chakra-ui/react'
+import { memo, useEffect, useMemo, useRef } from 'react'
+import { MarkdownHooks } from 'react-markdown'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeExternalLinks from 'rehype-external-links'
+import rehypeRaw from 'rehype-raw'
+import rehypeSlug from 'rehype-slug'
+import rehypeStarryNight from 'rehype-starry-night'
+import remarkEmoji from 'remark-emoji'
+import remarkGfm from 'remark-gfm'
+import remarkGithub from 'remark-github'
+import { remarkAlert } from 'remark-github-blockquote-alert'
+import rehypeInternalUrlActions from '~/lib/rehypeInternalUrlActions'
+import '~/css/markdown.css'
+import 'remark-github-blockquote-alert/alert.css'
+
+export type DocMarkdownContentOnRendered = (markdownContainerRef: HTMLDivElement | null) => void
+
+export interface DocMarkdownContentProps {
+  text: string
+  owner: string
+  repo: string
+  dirLink: string
+  onRendered?: DocMarkdownContentOnRendered
+}
+
+export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownContentProps) => {
+  const markdownContainerRef = useRef<HTMLDivElement>(null)
+  const ownerRepo = useMemo(() => `${owner}/${repo}`, [owner, repo])
+
+  const CenterSpinner = () => {
+    useEffect(() => {
+      return () => {
+        onRendered?.(markdownContainerRef.current)
+        // Scroll to anchor
+        const hash = location.hash
+        if (hash) {
+          markdownContainerRef.current?.querySelector(hash)?.scrollIntoView()
+        }
+      }
+    }, [])
+
+    return (
+      <Center width="100%">
+        <Spinner size="lg" />
+      </Center>
+    )
+  }
+
+  return (
+    <Box
+      as="article"
+      bgColor="transparent"
+      _dark={{ bgColor: 'transparent' }}
+      className="markdown-body"
+      boxSize="full"
+      ref={markdownContainerRef}
+    >
+      <MarkdownHooks
+        remarkPlugins={[remarkGfm, [remarkGithub, { repository: ownerRepo }], remarkAlert, remarkEmoji]}
+        rehypePlugins={[rehypeRaw, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], rehypeStarryNight, rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
+          onInternalUrl(ctx: InternalUrlContext) {
+            const isAnchor = ctx.tagName === 'a' && ctx.attrName === 'href'
+            const isAnchorMd = ctx.tagName === 'a' && ctx.attrName === 'href' && ctx.url.toLowerCase().endsWith('.md')
+            const url = ctx.url.replace(/^(?:\.\/|\/)?(.*)/, (_, p1) => `${isAnchorMd ? `/${ownerRepo}` : dirLink}/${p1}`)
+
+            if (isAnchorMd) {
+              return {
+                url,
+              }
+            }
+
+            if (isAnchor) {
+              ctx.removeAttr()
+              ctx.setAttr('data-href', url)
+              ctx.setAttr('role', 'button')
+              ctx.setAttr('tabIndex', 0)
+              ctx.setAttr('target', null)
+              ctx.setAttr('rel', null)
+              ctx.setAttr('title', 'Opens preview')
+            }
+            else {
+              return {
+                url,
+              }
+            }
+          },
+        }]]}
+        remarkRehypeOptions={{ allowDangerousHtml: true }}
+        fallback={(
+          <CenterSpinner />
+        )}
+      >
+        {text}
+      </MarkdownHooks>
+    </Box>
+  )
+})

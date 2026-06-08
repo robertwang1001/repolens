@@ -1,63 +1,45 @@
+import type { DocMarkdownContentOnRendered } from '~/components/shared/DocMarkdownContent'
 import { Box, Button, ClientOnly, Stack, Text } from '@chakra-ui/react'
-import { useCallback, useContext, useEffect, useState } from 'react'
+import { useCallback, useContext, useEffect } from 'react'
+import DocMarkdown from '~/components/shared/DocMarkdown'
 import { useReadmeInfo } from '~/hooks/use-readme-info'
-import { fetchReadme } from '~/services/readme/fetch-readme'
+import { useFetchDoc } from '~/hooks/useFetchDoc'
 import ContentHeader from './content-header'
-import ContentMarkdown from './content-markdown'
 import ContentSpinner from './content-spinner'
 import { MarkdownContext } from './MarkdownContext'
 
-export default function Content({ owner, repo }: { owner: string, repo: string }) {
+export default function Content({ owner, repo, path }: { owner: string, repo: string, path?: string }) {
   const { fetcher, load } = useReadmeInfo()
-  const { markdown, setMarkdown } = useContext(MarkdownContext)
+  const { markdown, setMarkdown, setMarkdownContainer } = useContext(MarkdownContext)
 
   useEffect(() => {
-    load(owner, repo)
-  }, [owner, repo])
+    load(owner, repo, path)
+  }, [owner, repo, path])
 
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-  const loadMarkdown = async (url: string, abortController?: AbortController) => {
-    setLoading(true)
-    setError(null)
-    setMarkdown('')
-
-    const isAborted = () => !!abortController?.signal.aborted
-
-    try {
-      const text = await fetchReadme(url, {
-        abortController,
-      })
-
-      if (!isAborted())
-        setMarkdown(text)
-    }
-    catch (e: unknown) {
-      if (!isAborted())
-        setError((e as Error)?.message ?? String(e))
-    }
-    finally {
-      if (!isAborted())
-        setLoading(false)
-    }
-  }
-
+  const { toFetch, loading, error, doc, toCancel } = useFetchDoc()
   useEffect(() => {
-    const controller = new AbortController()
     const url = fetcher.data?.readmeLink
     if (url) {
-      loadMarkdown(url, controller)
+      toFetch(url)
     }
     return () => {
-      controller.abort()
+      toCancel()
     }
   }, [fetcher.data?.readmeLink])
 
+  useEffect(() => {
+    setMarkdown(doc ?? '')
+  }, [doc])
+
   const refreshPage = useCallback(() => window.location.reload(), [])
+
+  const onRendered = useCallback<DocMarkdownContentOnRendered>((el) => {
+    setMarkdownContainer(el)
+  }, [])
 
   return (
     <Stack minH="full" maxW="4xl" mx="auto" px={[4, 8]} pb={4}>
-      <Box position="sticky" top={0} left={0}>
+      <Box position="sticky" top={0} left={0} zIndex={1}>
         <ContentHeader owner={owner} repo={repo} repoUrl={`https://github.com/${owner}/${repo}`} />
       </Box>
       <Box>
@@ -72,7 +54,7 @@ export default function Content({ owner, repo }: { owner: string, repo: string }
             ? <ContentSpinner />
             : (
                 <ClientOnly fallback={<ContentSpinner />}>
-                  <ContentMarkdown owner={owner} repo={repo} text={markdown} />
+                  <DocMarkdown owner={owner} repo={repo} text={markdown} dirLink={fetcher.data?.dirLink ?? ''} onRendered={onRendered} />
                 </ClientOnly>
               )}
       </Box>

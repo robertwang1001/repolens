@@ -21,6 +21,8 @@ export default function ReadmeRoute({ params }: Route.ComponentProps): ReactElem
   if (!owner || !repo)
     throw new Error('Owner and repo is required')
 
+  const path = params['*'].trim()
+
   const [markdown, setMarkdown] = useState<string>('')
   const [markdownContainer, setMarkdownContainer] = useState<HTMLDivElement | null>(null)
   const providedValue = useMemo(() => ({ markdown, setMarkdown, markdownContainer, setMarkdownContainer }), [markdown, markdownContainer])
@@ -32,12 +34,12 @@ export default function ReadmeRoute({ params }: Route.ComponentProps): ReactElem
           <LogoLinkable showTitle />
           <ColorModeButton />
         </HStack>
-        <Box h="full" w="xs" hideBelow="md">
+        <Box h="full" w={[undefined, undefined, 'xs', 'md', 'lg']} hideBelow="md">
           <Sidebar />
         </Box>
         <Separator orientation="vertical" h="full" hideBelow="md" />
         <Box w="full" h="full" overflowY="scroll">
-          <Content owner={owner} repo={repo} />
+          <Content owner={owner} repo={repo} path={path} />
         </Box>
       </HStack>
     </MarkdownContext.Provider>

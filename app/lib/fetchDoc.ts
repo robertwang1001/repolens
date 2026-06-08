@@ -4,21 +4,21 @@ interface Options {
   abortController?: AbortController
 }
 
-const log = logger.getChild('fetchReadme')
+const log = logger.getChild('fetchDoc')
 
-export async function fetchReadme(
-  readmeLink: string,
+export async function fetchDoc(
+  url: string,
   { abortController }: Options = {},
 ): Promise<string> {
-  log.debug`Fetching readme of ${readmeLink}...`
+  log.debug`Fetching doc. ${url} ...`
 
-  const res = await fetch(readmeLink, {
+  const res = await fetch(url, {
     signal: abortController?.signal,
   })
   if (!res.ok)
     throw new Error(`Fetch failed: ${res.status}`)
 
-  log.debug`Fetched readme.`
+  log.debug`Fetched doc.`
 
   // If streaming not available, fall back
   if (!res.body) {
