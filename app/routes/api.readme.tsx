@@ -28,9 +28,18 @@ export async function loader({ request }: Route.LoaderArgs): Promise<ReadmeInfo>
     if (cacheValue)
       return cacheValue
 
-    const readme = await octokit.rest.repos.getReadme({ owner, repo, ref, headers: {
-      accept: 'application/vnd.github+json',
-    } })
+    let readme
+    const isDir = (path: any): path is string => path && !path.toLowerCase().endsWith('.md')
+    if (isDir(path)) {
+      readme = await octokit.rest.repos.getReadmeInDirectory({ owner, repo, ref, dir: path, headers: {
+        accept: 'application/vnd.github+json',
+      } })
+    }
+    else {
+      readme = await octokit.rest.repos.getReadme({ owner, repo, ref, headers: {
+        accept: 'application/vnd.github+json',
+      } })
+    }
 
     const downloadUrl = readme.data.download_url
     if (!downloadUrl) {
@@ -38,7 +47,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<ReadmeInfo>
     }
 
     const dirLink = dirname(downloadUrl)
-    const readmeLink = path ? join(dirLink, path) : downloadUrl
+    const readmeLink = path && !isDir(path) ? join(dirLink, path) : downloadUrl
 
     const result: ReadmeInfo = { readmeLink, dirLink }
     cache.set(cacheKey, result)

@@ -45,7 +45,7 @@ export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownCont
         // Scroll to anchor
         const hash = location.hash
         if (hash) {
-          markdownContainerRef.current?.querySelector(hash)?.scrollIntoView()
+          markdownContainerRef.current?.querySelector(decodeURIComponent(hash))?.scrollIntoView()
         }
       }
     }, [])
@@ -74,7 +74,7 @@ export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownCont
         }], rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
           onInternalUrl(ctx: InternalUrlContext) {
             const isAnchor = ctx.tagName === 'a' && ctx.attrName === 'href'
-            const isAnchorMd = ctx.tagName === 'a' && ctx.attrName === 'href' && ctx.url.toLowerCase().endsWith('.md')
+            const isAnchorMd = isAnchor && (ctx.url.toLowerCase().endsWith('.md') || !/\.[^/]+$/.test(ctx.url) /* Dir */)
             const url = ctx.url.replace(/^(?:\.\/|\/)?(.*)/, (_, p1) => `${isAnchorMd ? `/${ownerRepo}` : dirLink}/${p1}`)
 
             if (isAnchorMd) {
