@@ -26,6 +26,9 @@ importers:
       '@shikijs/rehype':
         specifier: ^4.2.0
         version: 4.2.0
+      async-wait-until:
+        specifier: ^2.0.31
+        version: 2.0.31
       isbot:
         specifier: ^5.1.41
         version: 5.1.41
@@ -3115,6 +3118,10 @@ packages:
 
   async-sema@3.1.1:
     resolution: {integrity: sha512-tLRNUXati5MFePdAk8dw7Qt7DpxPB60ofAgn8WRhW6a2rcimZnYBP9oxHiv0OHy+Wz7kPMG+t4LGdt31+4EmGg==}
+
+  async-wait-until@2.0.31:
+    resolution: {integrity: sha512-9VCfHvc4f36oT6sG5p16aKc9zojf3wF4FrjNDxU3Db51SJ1bQ5lWAWtQDDZPysTwSLKBDzNZ083qPkTIj6XnrA==}
+    engines: {node: '>= 0.14.0', npm: '>= 1.0.0'}
 
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
@@ -10741,6 +10748,8 @@ snapshots:
       retry: 0.13.1
 
   async-sema@3.1.1: {}
+
+  async-wait-until@2.0.31: {}
 
   asynckit@0.4.0: {}
 

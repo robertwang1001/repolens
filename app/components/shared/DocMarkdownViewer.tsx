@@ -62,9 +62,9 @@ export default memo(({ url, title: titleProp, open: openProp, onOpenChange }: Do
                 {
                   error
                     ? (
-                        <Stack>
-                          <Text color="fg.error">{error}</Text>
-                          <Button onClick={() => toFetch()}>Reload</Button>
+                        <Stack gap="4">
+                          <Text color="fg.error" fontSize="lg">{error}</Text>
+                          <Button onClick={() => toFetch()} variant="subtle">Try again</Button>
                         </Stack>
                       )
                     : loading

@@ -1,24 +1,11 @@
 'use client'
 
 import type { FlexProps } from '@chakra-ui/react'
-import type { HighlighterGeneric } from 'shiki'
-import { CodeBlock, createShikiAdapter, Flex, Float, IconButton } from '@chakra-ui/react'
-import { memo } from 'react'
+import { CodeBlock, Flex, Float, IconButton } from '@chakra-ui/react'
+import { memo, useEffect, useState } from 'react'
+import { logger } from '~/lib/logger'
+import { ensureShikiLang, isIncludedInShikiLoaded, SHIKI_DEFAULT_LANGUAGE, shikiAdapter } from '~/lib/shikiAdapter'
 import { useColorMode } from './color-mode'
-
-const shikiAdapter = createShikiAdapter<HighlighterGeneric<any, any>>({
-  async load() {
-    const { createHighlighter } = await import('shiki')
-    return createHighlighter({
-      langs: ['text', 'js', 'ts', 'tsx', 'html', 'css', 'json', 'yaml', 'bash', 'sql', 'dockerfile', 'go', 'java', 'c', 'c++', 'ruby', 'rust', 'swift', 'kotlin'],
-      themes: ['github-dark-default', 'github-light-default'],
-    })
-  },
-  theme: {
-    light: 'github-light-default',
-    dark: 'github-dark-default',
-  },
-})
 
 interface DocCodeBlockProps {
   code: string
@@ -26,15 +13,28 @@ interface DocCodeBlockProps {
   wrap?: boolean
 }
 
-export default memo(({ code, language, wrap, ...flexProps }: DocCodeBlockProps & FlexProps) => {
+const log = logger.getChild('DocCodeBlock')
+
+export default memo(({ code, language: lang, wrap, ...flexProps }: DocCodeBlockProps & FlexProps) => {
   const { colorMode } = useColorMode()
+  const [language, setLanguage] = useState<string | undefined>(() => (isIncludedInShikiLoaded(lang) ? lang : undefined))
+  useEffect(() => {
+    (async () => {
+      if (language)
+        return
+      log.debug`Ensuring language ${lang ?? ''}...`
+      const _language = await ensureShikiLang(lang)
+      log.debug`Ensured language ${_language}`
+      setLanguage(_language)
+    })()
+  }, [lang, language])
 
   return (
     <Flex minH="full" w="full" {...flexProps}>
       <CodeBlock.AdapterProvider value={shikiAdapter}>
         <CodeBlock.Root
           code={code}
-          language={language}
+          language={language ?? SHIKI_DEFAULT_LANGUAGE}
           meta={{ showLineNumbers: true, colorScheme: colorMode, wordWrap: wrap }}
           flexGrow={1}
           minH={0}
