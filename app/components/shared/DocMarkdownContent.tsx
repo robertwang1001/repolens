@@ -1,5 +1,6 @@
 import type { InternalUrlContext } from '~/lib/rehypeInternalUrlActions'
 import { Box, Center, Spinner } from '@chakra-ui/react'
+import rehypeShiki from '@shikijs/rehype'
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { MarkdownHooks } from 'react-markdown'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
@@ -7,7 +8,6 @@ import rehypeExternalLinks from 'rehype-external-links'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeSlug from 'rehype-slug'
-import rehypeStarryNight from 'rehype-starry-night'
 import remarkEmoji from 'remark-emoji'
 import remarkGfm from 'remark-gfm'
 import remarkGithub from 'remark-github'
@@ -66,7 +66,12 @@ export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownCont
     >
       <MarkdownHooks
         remarkPlugins={[remarkGfm, [remarkGithub, { repository: ownerRepo }], remarkAlert, remarkEmoji]}
-        rehypePlugins={[rehypeRaw, rehypeSanitize, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], rehypeStarryNight, rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
+        rehypePlugins={[rehypeRaw, rehypeSanitize, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], [rehypeShiki, {
+          themes: {
+            light: 'github-light-default',
+            dark: 'github-dark-default',
+          },
+        }], rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
           onInternalUrl(ctx: InternalUrlContext) {
             const isAnchor = ctx.tagName === 'a' && ctx.attrName === 'href'
             const isAnchorMd = ctx.tagName === 'a' && ctx.attrName === 'href' && ctx.url.toLowerCase().endsWith('.md')

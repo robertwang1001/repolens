@@ -1,6 +1,6 @@
 import type { Route } from './+types/root'
 
-import { Button, Container, Heading, HStack, Stack, Text } from '@chakra-ui/react'
+import { Button, Center, Code, Container, Heading, HStack, Stack, Text } from '@chakra-ui/react'
 import { useCallback } from 'react'
 import { FaArrowLeft, FaHome } from 'react-icons/fa'
 import {
@@ -84,28 +84,30 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   const navigateBackword = useCallback(() => navigate(-1), [])
 
   return (
-    <Container as="main" maxW="8xl" h="vh" display="flex" justifyContent="center" alignItems="center">
-      <Stack>
-        <Heading size="5xl" textAlign="center">{message}</Heading>
-        <Text fontSize="2xl" color="fg.muted">{details}</Text>
-        {stack && (
-          <pre className="w-full p-4 overflow-x-auto">
-            <code>{stack}</code>
-          </pre>
-        )}
-        <HStack justifyContent="center">
-          <Button asChild variant="outline">
-            <ReactRouterLink to="/">
-              <FaHome />
-              Go Home
-            </ReactRouterLink>
-          </Button>
-          <Button onClick={navigateBackword}>
-            <FaArrowLeft />
-            Back
-          </Button>
-        </HStack>
-      </Stack>
+    <Container as="main" maxW="8xl" h="vh" centerContent>
+      <Center maxW="full" h="full">
+        <Stack gap={8} maxW="full">
+          <Heading size="5xl" textAlign="center">{message}</Heading>
+          <Text fontSize="2xl" color="fg.muted" textAlign="center">{details}</Text>
+          {stack && (
+            <Text>
+              <Code size="md" maxW="full" overflow="auto">{stack}</Code>
+            </Text>
+          )}
+          <HStack justifyContent="center" gap={['4', '8']}>
+            <Button asChild variant="outline">
+              <ReactRouterLink to="/">
+                <FaHome />
+                Go Home
+              </ReactRouterLink>
+            </Button>
+            <Button onClick={navigateBackword}>
+              <FaArrowLeft />
+              Back
+            </Button>
+          </HStack>
+        </Stack>
+      </Center>
     </Container>
   )
 }

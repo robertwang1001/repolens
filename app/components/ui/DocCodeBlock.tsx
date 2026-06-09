@@ -10,13 +10,13 @@ const shikiAdapter = createShikiAdapter<HighlighterGeneric<any, any>>({
   async load() {
     const { createHighlighter } = await import('shiki')
     return createHighlighter({
-      langs: ['js', 'ts', 'tsx', 'html', 'css', 'json'],
-      themes: ['github-dark', 'github-light'],
+      langs: ['text', 'js', 'ts', 'tsx', 'html', 'css', 'json', 'yaml', 'bash', 'sql', 'dockerfile', 'go', 'java', 'c', 'c++', 'ruby', 'rust', 'swift', 'kotlin'],
+      themes: ['github-dark-default', 'github-light-default'],
     })
   },
   theme: {
-    light: 'github-light',
-    dark: 'github-dark',
+    light: 'github-light-default',
+    dark: 'github-dark-default',
   },
 })
 
