@@ -1,12 +1,13 @@
 import type { DocMarkdownContentOnRendered } from '~/components/shared/DocMarkdownContent'
 import { Box, Button, ClientOnly, Stack, Text } from '@chakra-ui/react'
-import { useCallback, useContext, useEffect } from 'react'
-import DocMarkdown from '~/components/shared/DocMarkdown'
+import { lazy, Suspense, useCallback, useContext, useEffect } from 'react'
 import { useReadmeInfo } from '~/hooks/use-readme-info'
 import { useFetchDoc } from '~/hooks/useFetchDoc'
 import ContentHeader from './content-header'
 import ContentSpinner from './content-spinner'
 import { MarkdownContext } from './MarkdownContext'
+
+const DocMarkdown = lazy(() => import('~/components/shared/DocMarkdown'))
 
 export default function Content({ owner, repo, path }: { owner: string, repo: string, path?: string }) {
   const { fetcher, load } = useReadmeInfo()
@@ -54,7 +55,9 @@ export default function Content({ owner, repo, path }: { owner: string, repo: st
             ? <ContentSpinner />
             : (
                 <ClientOnly fallback={<ContentSpinner />}>
-                  <DocMarkdown owner={owner} repo={repo} text={markdown} dirLink={fetcher.data?.dirLink ?? ''} onRendered={onRendered} />
+                  <Suspense fallback={<ContentSpinner />}>
+                    <DocMarkdown owner={owner} repo={repo} text={markdown} dirLink={fetcher.data?.dirLink ?? ''} onRendered={onRendered} />
+                  </Suspense>
                 </ClientOnly>
               )}
       </Box>

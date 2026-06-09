@@ -5,6 +5,7 @@ import { MarkdownHooks } from 'react-markdown'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeRaw from 'rehype-raw'
+import rehypeSanitize from 'rehype-sanitize'
 import rehypeSlug from 'rehype-slug'
 import rehypeStarryNight from 'rehype-starry-night'
 import remarkEmoji from 'remark-emoji'
@@ -25,11 +26,19 @@ export interface DocMarkdownContentProps {
   onRendered?: DocMarkdownContentOnRendered
 }
 
+function CenterSpinner() {
+  return (
+    <Center width="100%">
+      <Spinner size="lg" />
+    </Center>
+  )
+}
+
 export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownContentProps) => {
   const markdownContainerRef = useRef<HTMLDivElement>(null)
   const ownerRepo = useMemo(() => `${owner}/${repo}`, [owner, repo])
 
-  const CenterSpinner = () => {
+  const Fallback = () => {
     useEffect(() => {
       return () => {
         onRendered?.(markdownContainerRef.current)
@@ -42,9 +51,7 @@ export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownCont
     }, [])
 
     return (
-      <Center width="100%">
-        <Spinner size="lg" />
-      </Center>
+      <CenterSpinner />
     )
   }
 
@@ -59,7 +66,7 @@ export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownCont
     >
       <MarkdownHooks
         remarkPlugins={[remarkGfm, [remarkGithub, { repository: ownerRepo }], remarkAlert, remarkEmoji]}
-        rehypePlugins={[rehypeRaw, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], rehypeStarryNight, rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
+        rehypePlugins={[rehypeRaw, rehypeSanitize, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], rehypeStarryNight, rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
           onInternalUrl(ctx: InternalUrlContext) {
             const isAnchor = ctx.tagName === 'a' && ctx.attrName === 'href'
             const isAnchorMd = ctx.tagName === 'a' && ctx.attrName === 'href' && ctx.url.toLowerCase().endsWith('.md')
@@ -89,7 +96,7 @@ export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownCont
         }]]}
         remarkRehypeOptions={{ allowDangerousHtml: true }}
         fallback={(
-          <CenterSpinner />
+          <Fallback />
         )}
       >
         {text}
