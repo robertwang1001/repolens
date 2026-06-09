@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/robertwang1001/repolens/compare/v1.2.0...v1.3.0) (2026-06-09)
+
+
+### Features
+
+* support readme page ([dd55eb0](https://github.com/robertwang1001/repolens/commit/dd55eb09e7ed6113e75543e4821e9928917e46b2))
+* support viewing internal non-markdown file contents ([04e88f3](https://github.com/robertwang1001/repolens/commit/04e88f3f6ae39c6daf91b04566c3d7184d27bf85))
+
+
+### Bug Fixes
+
+* add rehypeSanitize ([098b16c](https://github.com/robertwang1001/repolens/commit/098b16cd4c69e492e3a580e663e4a95730f463ca))
+
 ## [1.2.0](https://github.com/robertwang1001/repolens/compare/v1.1.0...v1.2.0) (2026-06-02)
 
 
