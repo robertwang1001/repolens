@@ -56,8 +56,7 @@ export interface Options {
   attributes?: UrlAttrName[]
 
   /**
-   * If provided, absolute URLs are considered internal only if same-origin as base.
-   * Example: "https://mysite.com"
+   * If provided, absolute URLs are considered internal only if they are prefixed with base.
    */
   base?: string
 
@@ -113,12 +112,19 @@ const rehypeInternalUrlActions: Plugin<[Options], Root> = (options) => {
         if (!isRewritableInternalUrl(raw, options.base))
           continue
 
+        // Normalize
+        let url = raw
+        if (options.base && url.startsWith(options.base)) {
+          url = url.substring(options.base.length)
+        }
+        url = url.replace(/^(?:\.\/|\/)?(.*)/, (_, p1) => p1)
+
         const ctxBase = createCtx({
           node,
           properties,
           tagName: node.tagName,
           attrName,
-          url: raw,
+          url,
           srcsetDescriptor: null,
           base: options.base,
         })
@@ -182,14 +188,7 @@ function isRewritableInternalUrl(url: string, base?: string): boolean {
   if (/^[a-z][a-z\d+\-.]*:/i.test(url)) {
     if (!base)
       return false
-    try {
-      const u = new URL(url)
-      const b = new URL(base)
-      return u.origin === b.origin
-    }
-    catch {
-      return false
-    }
+    return url.startsWith(base)
   }
 
   // otherwise it's relative (/x, ./x, x) => internal

@@ -1,5 +1,5 @@
 import type { Route } from '../+types/root'
-import { dirname, join } from 'node:path'
+import { dirname } from 'node:path'
 import { LRUCache } from 'lru-cache'
 import { data } from 'react-router'
 import { octokit } from '~/lib/octokit.server'
@@ -7,6 +7,7 @@ import { octokit } from '~/lib/octokit.server'
 interface ReadmeInfo {
   readmeLink: string
   dirLink: string
+  ref: string
 }
 
 const cache = new LRUCache<string, ReadmeInfo>({ max: 100, ttl: 30 * 60_000 })
@@ -29,8 +30,8 @@ export async function loader({ request }: Route.LoaderArgs): Promise<ReadmeInfo>
       return cacheValue
 
     let readme
-    const isDir = (path: any): path is string => path && !path.toLowerCase().endsWith('.md')
-    if (isDir(path)) {
+    const isDirPath = (path: any): path is string => path && !path.toLowerCase().endsWith('.md')
+    if (isDirPath(path)) {
       readme = await octokit.rest.repos.getReadmeInDirectory({ owner, repo, ref, dir: path, headers: {
         accept: 'application/vnd.github+json',
       } })
@@ -47,9 +48,14 @@ export async function loader({ request }: Route.LoaderArgs): Promise<ReadmeInfo>
     }
 
     const dirLink = dirname(downloadUrl)
-    const readmeLink = path && !isDir(path) ? join(dirLink, path) : downloadUrl
+    const readmeLink = path && !isDirPath(path) ? `${dirLink}/${path}` : downloadUrl
+    const _ref = ref ?? new URL(readmeLink).pathname.split('/')[3]
 
-    const result: ReadmeInfo = { readmeLink, dirLink }
+    const result: ReadmeInfo = {
+      readmeLink,
+      dirLink,
+      ref: _ref,
+    }
     cache.set(cacheKey, result)
 
     return result

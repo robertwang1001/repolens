@@ -5,3 +5,5 @@ export const APP_DESCRIPTION = 'Search GitHub repos. Open any README in a struct
 export const APP_VERSION = packageJson.version
 export const USER_NAME = 'sindresorhus'
 export const TEXT_QUERY_KEY = 'q'
+
+export const GITHUB_ORIGIN = 'https://github.com'
