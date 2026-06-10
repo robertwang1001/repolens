@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.4.0](https://github.com/robertwang1001/repolens/compare/v1.3.0...v1.4.0) (2026-06-10)
+
+
+### Features
+
+* **doccodeblock:** ensure language ([af710dd](https://github.com/robertwang1001/repolens/commit/af710dd6c26e3de9cd4fca1b384b4c3d893f190f))
+
+
+### Bug Fixes
+
+* directory readme ([f269f82](https://github.com/robertwang1001/repolens/commit/f269f826ece460bc1b4eaa945df02e67c9bc182c))
+* enhance internal url identifing ([1cc8886](https://github.com/robertwang1001/repolens/commit/1cc88863e38bcee3a291f3914fb5fb7201a41464))
+* enhance internal url identifing ([8324377](https://github.com/robertwang1001/repolens/commit/8324377d17fb5cb59693bb896ae67ef8707f491b))
+* internal ([19a1fdd](https://github.com/robertwang1001/repolens/commit/19a1fdd58f37806c4f5433d5d107337de9608bdb))
+* use shiki for code block in markdown ([2a04480](https://github.com/robertwang1001/repolens/commit/2a04480b00e8d44141b4a9f5819ee8041da9baf1))
+
 ## [1.3.0](https://github.com/robertwang1001/repolens/compare/v1.2.0...v1.3.0) (2026-06-09)
 
 
