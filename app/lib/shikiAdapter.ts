@@ -53,7 +53,7 @@ export async function ensureShikiLang(language?: string) {
     await highlighter.loadLanguage(safe as BundledLanguage)
     return safe
   }
-  catch (err) {
+  catch {
     return SHIKI_DEFAULT_LANGUAGE
   }
   finally {

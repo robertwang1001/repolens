@@ -1,6 +1,7 @@
-import type { RepoListItem } from '~/types/repo-search'
+import type { FetcherWithComponents } from 'react-router'
+import type { RepoListItem, RepoSearchPageResult } from '~/types/repo-search'
 import { Button, For, HStack, SimpleGrid, Spinner, Stack } from '@chakra-ui/react'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useRef } from 'react'
 import { useSearchParams } from 'react-router'
 import { useSearch } from '~/hooks/use-search'
 import { TEXT_QUERY_KEY } from '~/lib/constants'
@@ -10,26 +11,31 @@ import RepositoryListItem from './repository-list-item'
 
 const log = logger.getChild('Repository List')
 
-export default function RepositoryList() {
-  const [searchParams] = useSearchParams()
-  const [repos, setRepos] = useState<RepoListItem[]>(() => [])
-  const { fetcher, search } = useSearch()
+function useRepos(fetcher: FetcherWithComponents<RepoSearchPageResult>) {
+  const prevDataRef = useRef<typeof fetcher.data>(undefined)
+  const reposRef = useRef<RepoListItem[]>([])
 
-  useEffect(() => {
+  if (fetcher.data !== prevDataRef.current) {
+    prevDataRef.current = fetcher.data
     if (fetcher.data) {
-      const { repos, isFirstFetch } = fetcher.data
-      if (isFirstFetch) {
-        setRepos(repos)
+      if (fetcher.data.isFirstFetch) {
         log.debug`Update repos with data: ${fetcher.data}`
+        reposRef.current = fetcher.data.repos
       }
       else {
-        setRepos((_repos) => {
-          return [..._repos, ...repos]
-        })
         log.debug`Append repos with data: ${fetcher.data}`
+        reposRef.current = [...reposRef.current, ...fetcher.data.repos]
       }
     }
-  }, [fetcher.data])
+  }
+
+  return reposRef.current
+}
+
+export default function RepositoryList() {
+  const [searchParams] = useSearchParams()
+  const { fetcher, search } = useSearch()
+  const repos = useRepos(fetcher)
 
   const loadMore = useCallback(async () => {
     const urlSearchParams = new URLSearchParams()
@@ -44,7 +50,7 @@ export default function RepositoryList() {
     }
 
     await search(urlSearchParams)
-  }, [searchParams, fetcher.data?.pageInfo.endCursor, fetcher.data?.pageInfo.hasNextPage])
+  }, [searchParams, search, fetcher.data?.pageInfo.endCursor, fetcher.data?.pageInfo.hasNextPage])
 
   return (
     <Stack gap="4">

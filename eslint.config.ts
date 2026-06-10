@@ -2,7 +2,7 @@ import antfu from '@antfu/eslint-config'
 
 // https://eslint.vuejs.org/rules/
 export default await antfu({
-  // react: true,
+  react: true,
   rules: {
     'unused-imports/no-unused-imports': 'warn',
     'unused-imports/no-unused-vars': [

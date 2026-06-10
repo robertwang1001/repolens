@@ -7,7 +7,7 @@ export interface SidebarTocItemProps extends TocItem {
   isActive?: boolean
 }
 
-export default memo(({ depth, id, text, isActive }: SidebarTocItemProps) => {
+const SidebarTocItem = memo(({ depth, id, text, isActive }: SidebarTocItemProps) => {
   const ref = useRef<HTMLAnchorElement>(null)
   useEffect(() => {
     if (isActive) {
@@ -45,3 +45,5 @@ export default memo(({ depth, id, text, isActive }: SidebarTocItemProps) => {
     </Link>
   )
 })
+
+export default SidebarTocItem

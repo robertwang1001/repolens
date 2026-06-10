@@ -1,5 +1,5 @@
 import type { InternalUrlContext } from '~/lib/rehypeInternalUrlActions'
-import { Box, Center, Spinner } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import rehypeShiki from '@shikijs/rehype'
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { MarkdownHooks } from 'react-markdown'
@@ -14,6 +14,7 @@ import remarkGithub from 'remark-github'
 import { remarkAlert } from 'remark-github-blockquote-alert'
 import { GITHUB_ORIGIN } from '~/lib/constants'
 import rehypeInternalUrlActions from '~/lib/rehypeInternalUrlActions'
+import CenterSpinner from '../ui/CenterSpinner'
 import '~/css/markdown.css'
 import 'remark-github-blockquote-alert/alert.css'
 
@@ -28,34 +29,27 @@ export interface DocMarkdownContentProps {
   onRendered?: DocMarkdownContentOnRendered
 }
 
-function CenterSpinner() {
+function Fallback({ onRendered, markdownContainerRef }: { onRendered?: DocMarkdownContentOnRendered, markdownContainerRef: React.RefObject<HTMLDivElement | null> }) {
+  useEffect(() => {
+    const container = markdownContainerRef.current
+    return () => {
+      onRendered?.(container)
+      // Scroll to anchor
+      const hash = location.hash
+      if (hash) {
+        container?.querySelector(decodeURIComponent(hash))?.scrollIntoView()
+      }
+    }
+  }, [])
+
   return (
-    <Center width="100%">
-      <Spinner size="lg" />
-    </Center>
+    <CenterSpinner />
   )
 }
 
-export default memo(({ text, owner, repo, dirLink, ref, onRendered }: DocMarkdownContentProps) => {
+const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }: DocMarkdownContentProps) => {
   const markdownContainerRef = useRef<HTMLDivElement>(null)
   const ownerRepo = useMemo(() => `${owner}/${repo}`, [owner, repo])
-
-  const Fallback = () => {
-    useEffect(() => {
-      return () => {
-        onRendered?.(markdownContainerRef.current)
-        // Scroll to anchor
-        const hash = location.hash
-        if (hash) {
-          markdownContainerRef.current?.querySelector(decodeURIComponent(hash))?.scrollIntoView()
-        }
-      }
-    }, [])
-
-    return (
-      <CenterSpinner />
-    )
-  }
 
   return (
     <Box
@@ -106,7 +100,7 @@ export default memo(({ text, owner, repo, dirLink, ref, onRendered }: DocMarkdow
         }]]}
         remarkRehypeOptions={{ allowDangerousHtml: true }}
         fallback={(
-          <Fallback />
+          <Fallback onRendered={onRendered} markdownContainerRef={markdownContainerRef} />
         )}
       >
         {text}
@@ -114,3 +108,5 @@ export default memo(({ text, owner, repo, dirLink, ref, onRendered }: DocMarkdow
     </Box>
   )
 })
+
+export default DocMarkdownContent

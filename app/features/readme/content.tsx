@@ -1,6 +1,6 @@
 import type { DocMarkdownContentOnRendered } from '~/components/shared/DocMarkdownContent'
 import { Box, Button, ClientOnly, Stack, Text } from '@chakra-ui/react'
-import { lazy, Suspense, useCallback, useContext, useEffect } from 'react'
+import { lazy, Suspense, use, useCallback, useEffect } from 'react'
 import { useReadmeInfo } from '~/hooks/use-readme-info'
 import { useFetchDoc } from '~/hooks/useFetchDoc'
 import { GITHUB_ORIGIN } from '~/lib/constants'
@@ -12,7 +12,7 @@ const DocMarkdown = lazy(() => import('~/components/shared/DocMarkdown'))
 
 export default function Content({ owner, repo, path }: { owner: string, repo: string, path?: string }) {
   const { fetcher, load } = useReadmeInfo()
-  const { markdown, setMarkdown, setMarkdownContainer } = useContext(MarkdownContext)
+  const { markdown, setMarkdown, setMarkdownContainer } = use(MarkdownContext)
 
   useEffect(() => {
     load(owner, repo, path)

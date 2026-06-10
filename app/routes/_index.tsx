@@ -1,5 +1,5 @@
 import { Box, Center, ClientOnly, Container, Heading, HStack, Skeleton, Spinner, Stack, Text } from '@chakra-ui/react'
-import { useEffect, useState } from 'react'
+import { useRef } from 'react'
 import Logo from '~/components/shared/logo'
 import { ColorModeButton } from '~/components/ui/color-mode'
 import RepositoryList from '~/features/home/repository-list'
@@ -25,12 +25,10 @@ function CenterSpinner() {
 
 export default function Home() {
   const { fetcher } = useSearch()
-  const [firstTimeLoad, setFirstTimeLoad] = useState(true)
-  useEffect(() => {
-    if (fetcher.data) {
-      setFirstTimeLoad(false)
-    }
-  }, [fetcher])
+  const firstTimeLoadRef = useRef(true)
+  if (fetcher.data) {
+    firstTimeLoadRef.current = false
+  }
 
   return (
     <Stack gap={[8, 12]} minH="100vh">
@@ -53,7 +51,7 @@ export default function Home() {
             <Toolbar />
           </ClientOnly>
           <ClientOnly fallback={<CenterSpinner />}>
-            { firstTimeLoad ? <CenterSpinner /> : <RepositoryList />}
+            { firstTimeLoadRef.current ? <CenterSpinner /> : <RepositoryList />}
           </ClientOnly>
         </Stack>
       </Container>

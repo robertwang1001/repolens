@@ -9,14 +9,14 @@ import DocMarkdownViewer from './DocMarkdownViewer'
 
 const log = logger.getChild('DocMarkdown')
 
-export default memo((props: DocMarkdownContentProps) => {
+const DocMarkdown = memo((props: DocMarkdownContentProps) => {
   const [viewerUrl, setViewerUrl] = useState<string | undefined>(undefined)
   const [viewerTitle, setViewerTitle] = useState<string | undefined>(undefined)
   const [viewerOpen, setViewerOpen] = useState(false)
   const onOpenChange = useCallback<DocMarkdownViewerOnOpenChange>((o) => {
     setViewerOpen(o)
   }, [])
-  const onClick: MouseEventHandler<HTMLDivElement> = (evt) => {
+  const onClick: MouseEventHandler<HTMLDivElement> = useCallback((evt) => {
     const el = evt.target instanceof Element ? evt.target.closest('a[role="button"][data-href]') : null
     if (!el)
       return
@@ -31,7 +31,7 @@ export default memo((props: DocMarkdownContentProps) => {
     setViewerUrl(href)
     setViewerTitle(el.textContent)
     setViewerOpen(true)
-  }
+  }, [])
 
   return (
     <Box
@@ -45,7 +45,9 @@ export default memo((props: DocMarkdownContentProps) => {
       onClick={onClick}
     >
       <DocMarkdownContent {...props} />
-      <DocMarkdownViewer open={viewerOpen} url={viewerUrl ?? ''} title={viewerTitle} onOpenChange={onOpenChange} />
+      <DocMarkdownViewer open={viewerOpen} setOpen={setViewerOpen} url={viewerUrl ?? ''} title={viewerTitle} onOpenChange={onOpenChange} />
     </Box>
   )
 })
+
+export default DocMarkdown

@@ -1,12 +1,12 @@
 import { For, Stack } from '@chakra-ui/react'
-import { memo, useContext, useMemo } from 'react'
+import { memo, use, useMemo } from 'react'
 import { useMarkdownScrollSpy } from '~/hooks/useMarkdownScrollSpy'
 import { buildToc } from '~/lib/build-toc'
 import { MarkdownContext } from './MarkdownContext'
 import SidebarTocItem from './sidebar-toc-item'
 
-export default memo(() => {
-  const { markdown, markdownContainer } = useContext(MarkdownContext)
+const SidebarToc = memo(() => {
+  const { markdown, markdownContainer } = use(MarkdownContext)
   const toc = useMemo(() => buildToc(markdown), [markdown])
 
   const ids = useMemo(() => toc.map(t => t.id), [toc])
@@ -32,3 +32,5 @@ export default memo(() => {
     </nav>
   )
 })
+
+export default SidebarToc

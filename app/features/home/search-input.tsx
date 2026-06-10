@@ -7,24 +7,20 @@ import { TEXT_QUERY_KEY } from '~/lib/constants'
 
 export default function SearchInput() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const [textQuery, setTextQuery] = useState('')
   const inputRef = useRef<HTMLInputElement | null>(null)
 
   const queryFromUrl = useMemo(
     () => searchParams.get(TEXT_QUERY_KEY) ?? '',
     [searchParams],
   )
+  const [textQuery, setTextQuery] = useState(queryFromUrl)
 
   const { search, fetcher } = useSearch()
   useEffect(() => {
     search({ textQuery: queryFromUrl })
-  }, [queryFromUrl])
+  }, [search, queryFromUrl])
 
-  useEffect(() => {
-    setTextQuery(queryFromUrl)
-  }, [queryFromUrl])
-
-  const updateSearchParamQuery = (query: string) => {
+  const updateSearchParamQuery = useCallback((query: string) => {
     setSearchParams((prev) => {
       const next = new URLSearchParams(prev)
       if (query)
@@ -32,14 +28,14 @@ export default function SearchInput() {
       else next.delete(TEXT_QUERY_KEY)
       return next
     })
-  }
+  }, [])
 
   // Clear button
   const clearInput = useCallback(() => {
     setTextQuery('')
     updateSearchParamQuery('')
     inputRef.current?.focus()
-  }, [setTextQuery, updateSearchParamQuery])
+  }, [updateSearchParamQuery])
   const endElement = textQuery
     ? (
         <CloseButton

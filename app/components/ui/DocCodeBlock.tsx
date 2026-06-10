@@ -15,7 +15,7 @@ interface DocCodeBlockProps {
 
 const log = logger.getChild('DocCodeBlock')
 
-export default memo(({ code, language: lang, wrap, ...flexProps }: DocCodeBlockProps & FlexProps) => {
+const DocCodeBlock = memo(({ code, language: lang, wrap, ...flexProps }: DocCodeBlockProps & FlexProps) => {
   const { colorMode } = useColorMode()
   const [language, setLanguage] = useState<string | undefined>(() => (isIncludedInShikiLoaded(lang) ? lang : undefined))
   useEffect(() => {
@@ -68,3 +68,5 @@ export default memo(({ code, language: lang, wrap, ...flexProps }: DocCodeBlockP
     </Flex>
   )
 })
+
+export default DocCodeBlock

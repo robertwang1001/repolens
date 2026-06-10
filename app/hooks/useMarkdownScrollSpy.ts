@@ -7,7 +7,7 @@ export function useMarkdownScrollSpy(
 ) {
   const ids = selectedHeadingIds
   const [activeId, setActiveId] = useState<string>(ids[0] ?? '')
-  const intersectionObserverInit = useMemo(() => options, [])
+  const intersectionObserverInit = useMemo(() => options, [options])
 
   useEffect(() => {
     if (!markdownContainer || ids.length === 0)

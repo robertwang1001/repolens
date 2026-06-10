@@ -1,4 +1,5 @@
 import type { HighlightProps } from '@chakra-ui/react'
+import type { Except } from 'type-fest'
 import type { RepoListItem } from '~/types/repo-search'
 import { Avatar, Badge, Box, Button, Card, For, Heading, Highlight, HStack, Link, Text } from '@chakra-ui/react'
 import { memo, useMemo } from 'react'
@@ -18,17 +19,19 @@ const { format: dateFormat } = Intl.DateTimeFormat(undefined, {
   minute: 'numeric',
 })
 
-export default memo(({ repo }: { repo: RepoListItem }) => {
-  const updatedAt = useMemo(() => dateFormat(new Date(repo.pushedAt ?? repo.updatedAt)), [repo.pushedAt, repo.updatedAt])
-  const updatedAtAgo = useMemo(() => format(repo.pushedAt ?? repo.updatedAt), [repo.pushedAt, repo.updatedAt])
-  const [searchParams] = useSearchParams()
-  const textQuery = searchParams.get(TEXT_QUERY_KEY) ?? ''
-
-  const HighlightText = ({ children, ...props }: Omit<HighlightProps, 'query'>) => (
+const HighlightText = memo(({ textQuery, children, ...props }: Except<HighlightProps, 'query'> & { textQuery: string }) => {
+  return (
     <Highlight {...props} query={textQuery.split(' ')} styles={{ bg: 'gray.muted', px: '0.5' }} ignoreCase>
       { children }
     </Highlight>
   )
+})
+
+const RepositoryListItem = memo(({ repo }: { repo: RepoListItem }) => {
+  const updatedAt = useMemo(() => dateFormat(new Date(repo.pushedAt ?? repo.updatedAt)), [repo.pushedAt, repo.updatedAt])
+  const updatedAtAgo = useMemo(() => format(repo.pushedAt ?? repo.updatedAt), [repo.pushedAt, repo.updatedAt])
+  const [searchParams] = useSearchParams()
+  const textQuery = searchParams.get(TEXT_QUERY_KEY) ?? ''
 
   return (
     <Card.Root>
@@ -43,7 +46,7 @@ export default memo(({ repo }: { repo: RepoListItem }) => {
               <Heading size="xl" truncate>
                 {repo.owner.login}
                 /
-                <HighlightText>
+                <HighlightText textQuery={textQuery}>
                   {repo.name}
                 </HighlightText>
               </Heading>
@@ -57,7 +60,7 @@ export default memo(({ repo }: { repo: RepoListItem }) => {
       <Card.Body gap="4">
         <Card.Description lineClamp={3} flexGrow={1} fontWeight="semibold">
           {repo.description && (
-            <HighlightText>
+            <HighlightText textQuery={textQuery}>
               {repo.description}
             </HighlightText>
           )}
@@ -124,3 +127,5 @@ export default memo(({ repo }: { repo: RepoListItem }) => {
     </Card.Root>
   )
 })
+
+export default RepositoryListItem

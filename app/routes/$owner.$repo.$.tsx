@@ -28,7 +28,7 @@ export default function ReadmeRoute({ params }: Route.ComponentProps): ReactElem
   const providedValue = useMemo(() => ({ markdown, setMarkdown, markdownContainer, setMarkdownContainer }), [markdown, markdownContainer])
 
   return (
-    <MarkdownContext.Provider value={providedValue}>
+    <MarkdownContext value={providedValue}>
       <HStack flexDir={['column', 'column', 'row']} h="vh" w="vw" gap={0}>
         <HStack p={4} hideFrom="md" w="full" justifyContent="space-between">
           <LogoLinkable showTitle />
@@ -42,6 +42,6 @@ export default function ReadmeRoute({ params }: Route.ComponentProps): ReactElem
           <Content owner={owner} repo={repo} path={path} />
         </Box>
       </HStack>
-    </MarkdownContext.Provider>
+    </MarkdownContext>
   )
 }

@@ -11,27 +11,26 @@ export interface DocMarkdownViewerProps {
   url: string
   title?: string
   open: boolean
+  setOpen: (open: boolean) => void
   onOpenChange?: DocMarkdownViewerOnOpenChange
 }
 
 const DocCodeBlock = lazy(() => import('../ui/DocCodeBlock'))
 
-export default memo(({ url, title: titleProp, open: openProp, onOpenChange }: DocMarkdownViewerProps) => {
-  const [open, setOpen] = useState(openProp)
+const DocMarkdownViewer = memo(({ url, title: titleProp, open, setOpen, onOpenChange }: DocMarkdownViewerProps) => {
   const title = useMemo(() => titleProp || (url.match(/\/([^/]+)$/)?.[1] ?? ''), [url, titleProp])
-  const language = useMemo(() => (url.match(/\.([^./]+)$/)?.[1]), [url, title])
+  const language = useMemo(() => (url.match(/\.([^./]+)$/)?.[1]), [url])
   const { toFetch, toCancel, loading, error, doc } = useFetchDoc(url)
 
   useEffect(() => {
-    if (openProp)
+    if (open)
       toFetch()
     else
       toCancel()
-    setOpen(openProp)
     return () => {
       toCancel()
     }
-  }, [openProp])
+  }, [open])
 
   const [wrap, setWrap] = useState(false)
 
@@ -97,3 +96,5 @@ export default memo(({ url, title: titleProp, open: openProp, onOpenChange }: Do
     </Dialog.Root>
   )
 })
+
+export default DocMarkdownViewer
