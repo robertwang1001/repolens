@@ -12,6 +12,7 @@ import remarkEmoji from 'remark-emoji'
 import remarkGfm from 'remark-gfm'
 import remarkGithub from 'remark-github'
 import { remarkAlert } from 'remark-github-blockquote-alert'
+import { GITHUB_ORIGIN } from '~/lib/constants'
 import rehypeInternalUrlActions from '~/lib/rehypeInternalUrlActions'
 import '~/css/markdown.css'
 import 'remark-github-blockquote-alert/alert.css'
@@ -22,6 +23,7 @@ export interface DocMarkdownContentProps {
   text: string
   owner: string
   repo: string
+  ref: string
   dirLink: string
   onRendered?: DocMarkdownContentOnRendered
 }
@@ -34,7 +36,7 @@ function CenterSpinner() {
   )
 }
 
-export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownContentProps) => {
+export default memo(({ text, owner, repo, dirLink, ref, onRendered }: DocMarkdownContentProps) => {
   const markdownContainerRef = useRef<HTMLDivElement>(null)
   const ownerRepo = useMemo(() => `${owner}/${repo}`, [owner, repo])
 
@@ -72,12 +74,15 @@ export default memo(({ text, owner, repo, dirLink, onRendered }: DocMarkdownCont
             dark: 'github-dark-default',
           },
         }], rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
+          base: `${GITHUB_ORIGIN}/${ownerRepo}/blob/${ref}`,
           onInternalUrl(ctx: InternalUrlContext) {
             const isAnchor = ctx.tagName === 'a' && ctx.attrName === 'href'
             const isAnchorMd = isAnchor && (ctx.url.toLowerCase().endsWith('.md') || !/\.[^/]+$/.test(ctx.url) /* Dir */)
             const url = ctx.url.replace(/^(?:\.\/|\/)?(.*)/, (_, p1) => `${isAnchorMd ? `/${ownerRepo}` : dirLink}/${p1}`)
 
             if (isAnchorMd) {
+              ctx.setAttr('target', null)
+              ctx.setAttr('rel', null)
               return {
                 url,
               }

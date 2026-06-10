@@ -3,6 +3,7 @@ import { Box, Button, ClientOnly, Stack, Text } from '@chakra-ui/react'
 import { lazy, Suspense, useCallback, useContext, useEffect } from 'react'
 import { useReadmeInfo } from '~/hooks/use-readme-info'
 import { useFetchDoc } from '~/hooks/useFetchDoc'
+import { GITHUB_ORIGIN } from '~/lib/constants'
 import ContentHeader from './content-header'
 import ContentSpinner from './content-spinner'
 import { MarkdownContext } from './MarkdownContext'
@@ -41,7 +42,7 @@ export default function Content({ owner, repo, path }: { owner: string, repo: st
   return (
     <Stack minH="full" maxW="4xl" mx="auto" px={[4, 8]} pb={4}>
       <Box position="sticky" top={0} left={0} zIndex={1}>
-        <ContentHeader owner={owner} repo={repo} repoUrl={`https://github.com/${owner}/${repo}`} />
+        <ContentHeader owner={owner} repo={repo} repoUrl={`${GITHUB_ORIGIN}/${owner}/${repo}`} />
       </Box>
       <Box>
         {error
@@ -56,7 +57,7 @@ export default function Content({ owner, repo, path }: { owner: string, repo: st
             : (
                 <ClientOnly fallback={<ContentSpinner />}>
                   <Suspense fallback={<ContentSpinner />}>
-                    <DocMarkdown owner={owner} repo={repo} text={markdown} dirLink={fetcher.data?.dirLink ?? ''} onRendered={onRendered} />
+                    <DocMarkdown owner={owner} repo={repo} text={markdown} dirLink={fetcher.data?.dirLink ?? ''} ref={fetcher.data?.ref ?? ''} onRendered={onRendered} />
                   </Suspense>
                 </ClientOnly>
               )}
