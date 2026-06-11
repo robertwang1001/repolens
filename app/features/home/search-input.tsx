@@ -28,7 +28,7 @@ export default function SearchInput() {
       else next.delete(TEXT_QUERY_KEY)
       return next
     })
-  }, [])
+  }, [setSearchParams])
 
   // Clear button
   const clearInput = useCallback(() => {

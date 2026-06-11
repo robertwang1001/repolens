@@ -21,7 +21,7 @@ export default function ContentHeader({ owner, repo, repoUrl }: {
   repoUrl?: string
 }) {
   const navigate = useNavigate()
-  const navigateBackword = useCallback(() => navigate(-1), [])
+  const navigateBackword = useCallback(() => navigate(-1), [navigate])
   return (
     <HStack bg="bg" py={[2, 4]} justifyContent="space-between">
       <DrawerSidebar>

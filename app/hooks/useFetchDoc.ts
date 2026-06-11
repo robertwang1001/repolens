@@ -1,18 +1,18 @@
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { fetchDoc } from '~/lib/fetchDoc'
 
 export function useFetchDoc(defaultUrl?: string) {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [doc, setDoc] = useState<string | null>(null)
-  let abortController: AbortController | null
-  const isAborted = () => !!abortController?.signal.aborted
+  const abortControllerRef = useRef<AbortController | null>(null)
+  const isAborted = () => !!abortControllerRef.current?.signal.aborted
 
-  const toCancel = () => {
-    abortController?.abort()
-  }
+  const toCancel = useCallback(() => {
+    abortControllerRef.current?.abort()
+  }, [])
 
-  const toFetch = async (url = defaultUrl) => {
+  const toFetch = useCallback(async (url = defaultUrl) => {
     if (!url) {
       setError('`url` cannot be empty')
       return
@@ -20,12 +20,12 @@ export function useFetchDoc(defaultUrl?: string) {
     setLoading(true)
     setError(null)
     setDoc('')
-    abortController?.abort()
-    abortController = new AbortController()
+    abortControllerRef.current?.abort()
+    abortControllerRef.current = new AbortController()
 
     try {
       const text = await fetchDoc(url, {
-        abortController,
+        abortController: abortControllerRef.current,
       })
 
       if (!isAborted())
@@ -39,7 +39,7 @@ export function useFetchDoc(defaultUrl?: string) {
       if (!isAborted())
         setLoading(false)
     }
-  }
+  }, [defaultUrl])
 
   return {
     toFetch,

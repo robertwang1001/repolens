@@ -31,8 +31,8 @@ export interface DocMarkdownContentProps {
 
 function Fallback({ onRendered, markdownContainerRef }: { onRendered?: DocMarkdownContentOnRendered, markdownContainerRef: React.RefObject<HTMLDivElement | null> }) {
   useEffect(() => {
-    const container = markdownContainerRef.current
     return () => {
+      const container = markdownContainerRef.current
       onRendered?.(container)
       // Scroll to anchor
       const hash = location.hash
@@ -40,7 +40,7 @@ function Fallback({ onRendered, markdownContainerRef }: { onRendered?: DocMarkdo
         container?.querySelector(decodeURIComponent(hash))?.scrollIntoView()
       }
     }
-  }, [])
+  }, [onRendered, markdownContainerRef])
 
   return (
     <CenterSpinner />

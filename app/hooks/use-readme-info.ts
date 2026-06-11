@@ -1,4 +1,5 @@
 import type { loader } from '~/routes/api.readme'
+import { useCallback } from 'react'
 import { useFetcher } from 'react-router'
 import { toaster } from '~/components/ui/toaster'
 import { logger } from '~/lib/logger'
@@ -8,7 +9,7 @@ const log = logger.getChild('useReadmeInfo')
 export function useReadmeInfo() {
   const fetcher = useFetcher<typeof loader>({ key: 'readmeInfo' })
 
-  const load = async (owner: string, repo: string, path?: string) => {
+  const load = useCallback(async (owner: string, repo: string, path?: string) => {
     const searchParams = new URLSearchParams({ owner, repo })
     const pathTrimmed = path?.trim()
     if (pathTrimmed) {
@@ -30,7 +31,7 @@ export function useReadmeInfo() {
         type: 'error',
       })
     }
-  }
+  }, [fetcher.load])
 
   return {
     load,

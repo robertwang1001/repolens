@@ -16,7 +16,7 @@ export default function Content({ owner, repo, path }: { owner: string, repo: st
 
   useEffect(() => {
     load(owner, repo, path)
-  }, [owner, repo, path])
+  }, [load, owner, repo, path])
 
   const { toFetch, loading, error, doc, toCancel } = useFetchDoc()
   useEffect(() => {
@@ -27,17 +27,17 @@ export default function Content({ owner, repo, path }: { owner: string, repo: st
     return () => {
       toCancel()
     }
-  }, [fetcher.data?.readmeLink])
+  }, [fetcher.data?.readmeLink, toFetch, toCancel])
 
   useEffect(() => {
     setMarkdown(doc ?? '')
-  }, [doc])
+  }, [doc, setMarkdown])
 
   const refreshPage = useCallback(() => window.location.reload(), [])
 
   const onRendered = useCallback<DocMarkdownContentOnRendered>((el) => {
     setMarkdownContainer(el)
-  }, [])
+  }, [setMarkdownContainer])
 
   return (
     <Stack minH="full" maxW="4xl" mx="auto" px={[4, 8]} pb={4}>

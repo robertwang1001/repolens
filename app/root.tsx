@@ -81,7 +81,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   const navigate = useNavigate()
-  const navigateBackword = useCallback(() => navigate(-1), [])
+  const navigateBackword = useCallback(() => navigate(-1), [navigate])
 
   return (
     <Container as="main" maxW="8xl" h="vh" centerContent>

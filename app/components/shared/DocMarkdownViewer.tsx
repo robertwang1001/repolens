@@ -30,7 +30,7 @@ const DocMarkdownViewer = memo(({ url, title: titleProp, open, setOpen, onOpenCh
     return () => {
       toCancel()
     }
-  }, [open])
+  }, [open, toFetch, toCancel])
 
   const [wrap, setWrap] = useState(false)
 

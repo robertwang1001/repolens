@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function useMarkdownScrollSpy(
   markdownContainer: HTMLElement | null,
@@ -7,7 +7,7 @@ export function useMarkdownScrollSpy(
 ) {
   const ids = selectedHeadingIds
   const [activeId, setActiveId] = useState<string>(ids[0] ?? '')
-  const intersectionObserverInit = useMemo(() => options, [options])
+  const intersectionObserverInitRef = useRef(options)
 
   useEffect(() => {
     if (!markdownContainer || ids.length === 0)
@@ -44,7 +44,7 @@ export function useMarkdownScrollSpy(
           }
         })
       },
-      intersectionObserverInit,
+      intersectionObserverInitRef.current,
     )
 
     elements.forEach(el => observer.observe(el))
@@ -53,7 +53,7 @@ export function useMarkdownScrollSpy(
       cancelAnimationFrame(raf)
       observer.disconnect()
     }
-  }, [ids, markdownContainer, intersectionObserverInit])
+  }, [ids, markdownContainer])
 
   return activeId
 }
