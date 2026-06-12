@@ -3,6 +3,7 @@ import { Box } from '@chakra-ui/react'
 import rehypeShiki from '@shikijs/rehype'
 import { memo, useEffect, useMemo, useRef } from 'react'
 import { MarkdownHooks } from 'react-markdown'
+import { Link } from 'react-router'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeRaw from 'rehype-raw'
@@ -99,6 +100,9 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
           },
         }]]}
         remarkRehypeOptions={{ allowDangerousHtml: true }}
+        components={{
+          a: props => props.href ? <Link to={props.href}>{props.children}</Link> : <a {...props} />,
+        }}
         fallback={(
           <Fallback onRendered={onRendered} markdownContainerRef={markdownContainerRef} />
         )}

@@ -18,7 +18,7 @@ export default function Content({ owner, repo, path }: { owner: string, repo: st
     load(owner, repo, path)
   }, [load, owner, repo, path])
 
-  const { toFetch, loading, error, doc, toCancel } = useFetchDoc()
+  const { toFetch, loading: loadingDoc, error, doc, toCancel } = useFetchDoc()
   useEffect(() => {
     const url = fetcher.data?.readmeLink
     if (url) {
@@ -33,6 +33,7 @@ export default function Content({ owner, repo, path }: { owner: string, repo: st
     setMarkdown(doc ?? '')
   }, [doc, setMarkdown])
 
+  const loading = fetcher.state === 'loading' || loadingDoc
   const refreshPage = useCallback(() => window.location.reload(), [])
 
   const onRendered = useCallback<DocMarkdownContentOnRendered>((el) => {
