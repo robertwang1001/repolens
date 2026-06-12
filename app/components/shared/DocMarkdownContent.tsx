@@ -65,8 +65,8 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
         remarkPlugins={[remarkGfm, [remarkGithub, { repository: ownerRepo }], remarkAlert, remarkEmoji]}
         rehypePlugins={[rehypeRaw, rehypeSanitize, [rehypeExternalLinks, { target: '_blank', rel: ['noopener', 'noreferrer', 'nofollow'] }], [rehypeShiki, {
           themes: {
-            light: 'github-light-default',
-            dark: 'github-dark-default',
+            light: 'github-light',
+            dark: 'github-dark',
           },
         }], rehypeSlug]}
         remarkRehypeOptions={{ allowDangerousHtml: true }}
