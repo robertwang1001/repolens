@@ -1,10 +1,9 @@
-import type { InternalUrlContext } from '~/lib/rehypeInternalUrlActions'
-import { Box } from '@chakra-ui/react'
+import { Box, HStack, Link } from '@chakra-ui/react'
 import rehypeShiki from '@shikijs/rehype'
 import { memo, useEffect, useMemo, useRef } from 'react'
+import { LuExternalLink, LuView } from 'react-icons/lu'
 import { MarkdownHooks } from 'react-markdown'
-import { Link } from 'react-router'
-import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import { Link as ReactRouterLink } from 'react-router'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
@@ -14,7 +13,7 @@ import remarkGfm from 'remark-gfm'
 import remarkGithub from 'remark-github'
 import { remarkAlert } from 'remark-github-blockquote-alert'
 import { GITHUB_ORIGIN } from '~/lib/constants'
-import rehypeInternalUrlActions from '~/lib/rehypeInternalUrlActions'
+import { normalizeInternalUrl } from '~/lib/normalizeInternalUrl'
 import CenterSpinner from '../ui/CenterSpinner'
 import '~/css/markdown.css'
 import 'remark-github-blockquote-alert/alert.css'
@@ -51,6 +50,7 @@ function Fallback({ onRendered, markdownContainerRef }: { onRendered?: DocMarkdo
 const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }: DocMarkdownContentProps) => {
   const markdownContainerRef = useRef<HTMLDivElement>(null)
   const ownerRepo = useMemo(() => `${owner}/${repo}`, [owner, repo])
+  const baseUrl = useMemo(() => `${GITHUB_ORIGIN}/${ownerRepo}/blob/${ref}`, [ownerRepo, ref])
 
   return (
     <Box
@@ -68,40 +68,49 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
             light: 'github-light-default',
             dark: 'github-dark-default',
           },
-        }], rehypeSlug, rehypeAutolinkHeadings, [rehypeInternalUrlActions, {
-          base: `${GITHUB_ORIGIN}/${ownerRepo}/blob/${ref}`,
-          onInternalUrl(ctx: InternalUrlContext) {
-            const isAnchor = ctx.tagName === 'a' && ctx.attrName === 'href'
-            const isAnchorMd = isAnchor && (ctx.url.toLowerCase().endsWith('.md') || !/\.[^/]+$/.test(ctx.url) /* Dir */)
-            const url = `${isAnchorMd ? `/${ownerRepo}` : dirLink}/${ctx.url}`
-
-            if (isAnchorMd) {
-              ctx.setAttr('target', null)
-              ctx.setAttr('rel', null)
-              return {
-                url,
-              }
-            }
-
-            if (isAnchor) {
-              ctx.removeAttr()
-              ctx.setAttr('data-href', url)
-              ctx.setAttr('role', 'button')
-              ctx.setAttr('tabIndex', 0)
-              ctx.setAttr('target', null)
-              ctx.setAttr('rel', null)
-              ctx.setAttr('title', 'Opens preview')
-            }
-            else {
-              return {
-                url,
-              }
-            }
-          },
-        }]]}
+        }], rehypeSlug]}
         remarkRehypeOptions={{ allowDangerousHtml: true }}
         components={{
-          a: props => props.href ? <Link to={props.href}>{props.children}</Link> : <a {...props} />,
+          a({ node: _, ...props }) {
+            const normalAnchor = <a {...props} />
+            if (!props.href)
+              return normalAnchor
+
+            const { url, internal } = normalizeInternalUrl(props.href, baseUrl)
+            if (!internal) {
+              return (
+                <Link {...props} href={url}>
+                  {props.children}
+                  <LuExternalLink />
+                </Link>
+              )
+            }
+
+            if (url.toLowerCase().endsWith('.md') || !/\.[^/]+$/.test(url) /* Dir */) {
+              return <ReactRouterLink to={`/${ownerRepo}/${url}`}>{ props.children }</ReactRouterLink>
+            }
+            else {
+              return (
+                <button title="Opens preview" data-url={`${dirLink}/${url}`}>
+                  <HStack cursor="pointer" color="var(--fgColor-accent)" _hover={{ textDecoration: 'underline' }}>
+                    { props.children }
+                    <LuView />
+                  </HStack>
+                </button>
+              )
+            }
+          },
+          img({ node: _, ...props }) {
+            const normalImg = <img {...props} />
+            if (!props.src)
+              return normalImg
+
+            const { url, internal } = normalizeInternalUrl(props.src, baseUrl)
+            if (!internal)
+              return normalImg
+
+            return <img {...props} src={`${dirLink}/${url}`} />
+          },
         }}
         fallback={(
           <Fallback onRendered={onRendered} markdownContainerRef={markdownContainerRef} />

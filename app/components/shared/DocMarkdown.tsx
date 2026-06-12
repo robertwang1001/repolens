@@ -17,18 +17,18 @@ const DocMarkdown = memo((props: DocMarkdownContentProps) => {
     setViewerOpen(o)
   }, [])
   const onClick: MouseEventHandler<HTMLDivElement> = useCallback((evt) => {
-    const el = evt.target instanceof Element ? evt.target.closest('a[role="button"][data-href]') : null
+    const el = evt.target instanceof Element ? evt.target.closest('button[data-url]') : null
     if (!el)
       return
 
-    const href = el.getAttribute('data-href')
+    const url = el.getAttribute('data-url')
 
-    if (!href) {
-      log.error`\`data-href\` is empty`
+    if (!url) {
+      log.error`\`data-url\` is empty`
       return
     }
 
-    setViewerUrl(href)
+    setViewerUrl(url)
     setViewerTitle(el.textContent)
     setViewerOpen(true)
   }, [])

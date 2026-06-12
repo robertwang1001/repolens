@@ -1286,38 +1286,6 @@
   vertical-align: middle;
 }
 
-/* Anchor */
-
-/* Internal anchor */
-.markdown-body a[href] {
-  text-decoration: underline;
-}
-
-.markdown-body a[href]:hover {
-  text-decoration: none;
-}
-
-/* External anchor */
-.markdown-body a[href][target="_blank"] {
-  text-decoration: none;
-}
-
-.markdown-body a[href][target="_blank"]:hover {
-  text-decoration: underline;
-}
-
-/* Button-like anchor */
-.markdown-body a[role="button"][data-href] {
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-style: dotted;
-  color: var(--fgColor-accent);
-}
-
-.markdown-body a[role="button"][data-href]:hover {
-  text-decoration-style: solid;
-}
-
 /* Shiki */
 html .shiki {
   background: var(--bgColor-muted) !important;
