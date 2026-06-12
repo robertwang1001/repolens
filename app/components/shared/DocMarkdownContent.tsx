@@ -1,7 +1,7 @@
 import { Box, HStack, Link } from '@chakra-ui/react'
 import rehypeShiki from '@shikijs/rehype'
 import { memo, useEffect, useMemo, useRef } from 'react'
-import { LuExternalLink, LuView } from 'react-icons/lu'
+import { LuExternalLink, LuLink, LuView } from 'react-icons/lu'
 import { MarkdownHooks } from 'react-markdown'
 import { Link as ReactRouterLink } from 'react-router'
 import rehypeExternalLinks from 'rehype-external-links'
@@ -76,7 +76,7 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
             if (!props.href)
               return normalAnchor
 
-            const { url, internal } = normalizeInternalUrl(props.href, baseUrl)
+            const { url, internal, hash } = normalizeInternalUrl(props.href, baseUrl)
             if (!internal) {
               return (
                 <Link {...props} href={url}>
@@ -86,19 +86,27 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
               )
             }
 
+            if (hash) {
+              return (
+                <Link {...props} href={url}>
+                  {props.children}
+                  <LuLink />
+                </Link>
+              )
+            }
+
             if (url.toLowerCase().endsWith('.md') || !/\.[^/]+$/.test(url) /* Dir */) {
               return <ReactRouterLink to={`/${ownerRepo}/${url}`}>{ props.children }</ReactRouterLink>
             }
-            else {
-              return (
-                <button title="Opens preview" data-url={`${dirLink}/${url}`}>
-                  <HStack cursor="pointer" color="var(--fgColor-accent)" _hover={{ textDecoration: 'underline' }}>
-                    { props.children }
-                    <LuView />
-                  </HStack>
-                </button>
-              )
-            }
+
+            return (
+              <button title="Opens preview" data-url={`${dirLink}/${url}`}>
+                <HStack cursor="pointer" color="var(--fgColor-accent)" _hover={{ textDecoration: 'underline' }}>
+                  { props.children }
+                  <LuView />
+                </HStack>
+              </button>
+            )
           },
           img({ node: _, ...props }) {
             if (!props.src)

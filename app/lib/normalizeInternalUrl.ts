@@ -2,10 +2,6 @@ function isInternalUrl(url: string, base?: string): boolean {
   if (!url)
     return false
 
-  // only fragment
-  if (url.startsWith('#'))
-    return false
-
   // ignore common non-http schemes
   if (/^(?:mailto|tel|sms|javascript|data):/i.test(url))
     return false
@@ -19,7 +15,7 @@ function isInternalUrl(url: string, base?: string): boolean {
     return base ? url.startsWith(base) : false
   }
 
-  // otherwise it's relative (/x, ./x, x) => internal
+  // otherwise it's relative (/x, ./x, x, #x) => internal
   return true
 }
 
@@ -35,5 +31,6 @@ export function normalizeInternalUrl(url: string, base?: string) {
   return {
     url: result,
     internal,
+    hash: result.startsWith('#'),
   }
 }
