@@ -101,15 +101,16 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
             }
           },
           img({ node: _, ...props }) {
-            const normalImg = <img {...props} />
             if (!props.src)
-              return normalImg
+              return <img {...props} />
 
+            const maxHeight = props.height ? `${props.height}px` : undefined
+            const height = props.height ? 'auto' : undefined
             const { url, internal } = normalizeInternalUrl(props.src, baseUrl)
             if (!internal)
-              return normalImg
+              return <img {...props} style={{ maxHeight, height }} />
 
-            return <img {...props} src={`${dirLink}/${url}`} />
+            return <img {...props} style={{ maxHeight, height }} src={`${dirLink}/${url}`} />
           },
         }}
         fallback={(

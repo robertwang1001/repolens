@@ -1265,27 +1265,6 @@
   min-height: 52px;
 }
 
-/* Only treat linked images as inline badges when they come from known badge hosts */
-.markdown-body p>a>img[src*="img.shields.io"],
-.markdown-body p>a>img[src*="shields.io"],
-.markdown-body p>a>img[src*="badgen.net"],
-.markdown-body p>a>img[src*="badge.fury.io"],
-.markdown-body p>a>img[src*="travis-ci.org"],
-.markdown-body p>a>img[src*="travis-ci.com"],
-.markdown-body p>a>img[src*="circleci.com"],
-.markdown-body p>a>img[src*="codecov.io"],
-.markdown-body p>a>img[src*="coveralls.io"],
-.markdown-body p>a>img[src*="sonarcloud.io"],
-.markdown-body p>a>img[src*="codefactor.io"],
-.markdown-body p>a>img[src*="api.netlify.com"],
-.markdown-body p>a>img[src*="vercel.com"],
-.markdown-body p>a>img[src*="jenkins.io"],
-/* GitHub Actions and some other badge SVGs often come from github.com URLs */
-.markdown-body p>a>img[src*="github.com"][src*="badge"] {
-  display: inline-block;
-  vertical-align: middle;
-}
-
 /* Shiki */
 html .shiki {
   background: var(--bgColor-muted) !important;
