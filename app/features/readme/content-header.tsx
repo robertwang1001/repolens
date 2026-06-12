@@ -33,18 +33,22 @@ export default function ContentHeader({ owner, repo, repoUrl }: {
         <FaArrowLeft />
         Back
       </Button>
-      {
-        repoUrl
-          ? (
-              <Link href={repoUrl} target="_blank" rel="noopener noreferrer" maxW="full">
-                <OwnerRepo owner={owner} repo={repo} />
-                <Box flexShrink={0} color="fg.muted">
-                  <LuExternalLink />
-                </Box>
-              </Link>
-            )
-          : <OwnerRepo owner={owner} repo={repo} />
-      }
+      <HStack flexGrow={1} justifyContent="flex-end" minW={0}>
+        <Box maxW="full">
+          {
+            repoUrl
+              ? (
+                  <Link href={repoUrl} target="_blank" rel="noopener noreferrer" maxW="full">
+                    <OwnerRepo owner={owner} repo={repo} />
+                    <Box flexShrink={0} color="fg.muted">
+                      <LuExternalLink />
+                    </Box>
+                  </Link>
+                )
+              : <OwnerRepo owner={owner} repo={repo} />
+          }
+        </Box>
+      </HStack>
     </HStack>
   )
 }
