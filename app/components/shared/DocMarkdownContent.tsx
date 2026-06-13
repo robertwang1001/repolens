@@ -51,6 +51,7 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
   const markdownContainerRef = useRef<HTMLDivElement>(null)
   const ownerRepo = useMemo(() => `${owner}/${repo}`, [owner, repo])
   const baseUrl = useMemo(() => `${GITHUB_ORIGIN}/${ownerRepo}/blob/${ref}`, [ownerRepo, ref])
+  const dirPath = /\.[^/]+$/.test(location.pathname) ? location.pathname.replace(/(.+\/)[^/]*$/, (_, p1) => p1) : `${location.pathname}/`
 
   return (
     <Box
@@ -96,7 +97,7 @@ const DocMarkdownContent = memo(({ text, owner, repo, dirLink, ref, onRendered }
             }
 
             if (url.toLowerCase().endsWith('.md') || !/\.[^/]+$/.test(url) /* Dir */) {
-              return <ReactRouterLink to={`/${ownerRepo}/${url}`}>{ props.children }</ReactRouterLink>
+              return <ReactRouterLink to={`${dirPath}${url}`}>{ props.children }</ReactRouterLink>
             }
 
             return (

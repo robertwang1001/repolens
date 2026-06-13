@@ -6,6 +6,7 @@ import { octokit } from '~/lib/octokit.server'
 
 interface ReadmeInfo {
   readmeLink: string
+  rootLink: string
   dirLink: string
   ref: string
 }
@@ -47,12 +48,14 @@ export async function loader({ request }: Route.LoaderArgs): Promise<ReadmeInfo>
       throw data('No README download_url returned by GitHub', { status: 502 })
     }
 
-    const dirLink = dirname(downloadUrl)
-    const readmeLink = path && !isDirPath(path) ? `${dirLink}/${path}` : downloadUrl
+    const rootLink = dirname(downloadUrl)
+    const readmeLink = path && !isDirPath(path) ? `${rootLink}/${path}` : downloadUrl
+    const dirLink = dirname(readmeLink)
     const _ref = ref ?? new URL(readmeLink).pathname.split('/')[3]
 
     const result: ReadmeInfo = {
       readmeLink,
+      rootLink,
       dirLink,
       ref: _ref,
     }
