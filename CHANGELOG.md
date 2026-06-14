@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.1](https://github.com/robertwang1001/repolens/compare/v1.4.0...v1.4.1) (2026-06-14)
+
+
+### Bug Fixes
+
+* **content:** header title truncate ([1c7edb5](https://github.com/robertwang1001/repolens/commit/1c7edb5e9c15c7275a3390a82a4688c09cc5b162))
+* **doc markdown:** dirpath ([77067cf](https://github.com/robertwang1001/repolens/commit/77067cfd4ba9cc4e493e328d19ec7a7d64818a5e))
+* **md:** hash link ([f106ca6](https://github.com/robertwang1001/repolens/commit/f106ca6e546bfb7ac0c6d5da06ba855e780c1f1f))
+* **md:** img height ([ed76bfd](https://github.com/robertwang1001/repolens/commit/ed76bfd149bebbfae0f27d3cd231519d0ecfc0ba))
+* **md:** internal routing ([0c3ea95](https://github.com/robertwang1001/repolens/commit/0c3ea95950ba4486ee7ad37033fd1487e0f91a8a))
+* **md:** update shiki theme ([87df5a9](https://github.com/robertwang1001/repolens/commit/87df5a9ae6a98d94381cc256c49a4ce85f4d6220))
+* **md:** use components ([86f1eb5](https://github.com/robertwang1001/repolens/commit/86f1eb56b00f3a18574277e64419a593e188cfc5))
+
 ## [1.4.0](https://github.com/robertwang1001/repolens/compare/v1.3.0...v1.4.0) (2026-06-10)
 
 
