@@ -1,7 +1,7 @@
 {
   "name": "repo-lens",
   "type": "module",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "private": true,
   "packageManager": "pnpm@11.5.3",
   "description": "Search GitHub repos. Open any README in a structured, readable view.",
