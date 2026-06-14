@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/robertwang1001/repolens/compare/v1.4.1...v1.4.2) (2026-06-14)
+
+
+### Bug Fixes
+
+* **deps:** update all non-major dependencies ([1939768](https://github.com/robertwang1001/repolens/commit/19397688ac749946fa3410d1f5104dfe42b117bb))
+* **deps:** update all non-major dependencies ([476e670](https://github.com/robertwang1001/repolens/commit/476e670c5b0b3e06f2274c54e55468914995fbe2))
+
 ## [1.4.1](https://github.com/robertwang1001/repolens/compare/v1.4.0...v1.4.1) (2026-06-14)
 
 
