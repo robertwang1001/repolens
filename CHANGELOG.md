@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/robertwang1001/repolens/compare/v1.4.2...v1.4.3) (2026-08-02)
+
+
+### Bug Fixes
+
+* stablize node major version ([1d150cd](https://github.com/robertwang1001/repolens/commit/1d150cdbdf825759feab3028a28306d835637401))
+
 ## [1.4.2](https://github.com/robertwang1001/repolens/compare/v1.4.1...v1.4.2) (2026-06-14)
 
 
